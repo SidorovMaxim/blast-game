@@ -11,3 +11,12 @@ import yellow     from '../assets/boxes/yellow.png';
 
 const boxes = [blue, green, purple, red, yellow];
 
+
+let Application     = PIXI.Application,
+    Container       = PIXI.Container,
+    loader          = PIXI.Loader.shared,
+    AnimatedSprite  = PIXI.AnimatedSprite,    
+    Sprite          = PIXI.Sprite,
+    Text            = PIXI.Text,
+    TextStyle       = PIXI.TextStyle;
+
