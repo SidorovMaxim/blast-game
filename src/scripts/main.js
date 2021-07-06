@@ -88,6 +88,27 @@ function setup() {
   }
 
 
+  // Create score container
+  const scoreContainer = new Container();
+  scoreContainer.width = config.score.width_default;
+  scoreContainer.x = config.score.position_default.x * ratio;
+  scoreContainer.y = config.score.position_default.y * ratio;
+  gameScene.addChild(scoreContainer);
+
+  // Create score text
+  const scoreStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 80 * ratio,
+    fill: 'white'
+  });
+
+  const score = new Text('0', scoreStyle);
+  score.anchor.set(.5);
+  score.x = -score.width / 2;
+  score.x = -score.height / 2;
+  scoreContainer.addChild(score);
+
+
   // Create game field
   const field = new Container();
   field.x = config.field.position_default.x * ratio;

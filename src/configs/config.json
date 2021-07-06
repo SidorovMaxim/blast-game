@@ -1,4 +1,7 @@
 {
+  "score": {
+    "position_default": {"x": 1540, "y": 740}
+  },
   "field": {
     "position_default": {"x": 100, "y": 267},
     "size_default": 9,
