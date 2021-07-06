@@ -116,6 +116,11 @@ function setup() {
   }
 
 
+  // Handlers
+  function handleClick(event) {
+    changeField(event.target);
+  }
+
 
   // Func for creating new game field item
   function Item(column, row, itemSize) {
