@@ -23,3 +23,7 @@ let Application     = PIXI.Application,
 
 const HEIGHT_DEFAULT = 1357;
 const ASPECT_RATIO = 1.41;
+
+let windowHeight = window.innerHeight;
+let ratio = +(windowHeight / HEIGHT_DEFAULT).toFixed(3);
+
