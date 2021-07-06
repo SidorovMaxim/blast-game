@@ -72,6 +72,20 @@ function setup() {
       position: {x: 1430, y: 650}
     }
   ];
+
+  const headerStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 40 * ratio,
+    fill: 'white'
+  });
+
+  for (let i = 0; i < headers.length; i++) {
+    const header = new Text(headers[i].text, headerStyle);
+    header.x = headers[i].position.x * ratio;
+    header.y = headers[i].position.y * ratio;
+    gameScene.addChild(header);
+  }
+
 }
 
 
