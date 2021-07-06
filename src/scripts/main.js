@@ -20,3 +20,6 @@ let Application     = PIXI.Application,
     Text            = PIXI.Text,
     TextStyle       = PIXI.TextStyle;
 
+
+const HEIGHT_DEFAULT = 1357;
+const ASPECT_RATIO = 1.41;
