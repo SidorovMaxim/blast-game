@@ -41,3 +41,13 @@ loader
   .add(boxes)
   .load(setup);
 
+
+function setup() {
+
+  // Create game scene
+  const gameScene = new Container();
+  app.stage.addChild(gameScene);
+
+}
+
+
