@@ -7,3 +7,7 @@ import green      from '../assets/boxes/green.png';
 import purple     from '../assets/boxes/purple.png';
 import red        from '../assets/boxes/red.png';
 import yellow     from '../assets/boxes/yellow.png';
+
+
+const boxes = [blue, green, purple, red, yellow];
+
