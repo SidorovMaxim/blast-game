@@ -96,6 +96,49 @@ function setup() {
   field.numOfColors = config.field.numOfColors;
   gameScene.addChild(field);
 
+
+  // Create game field items
+  const fieldSizeRatio = field.size_default / field.size;
+  const itemSize = {
+    width: config.item.width_default * ratio * fieldSizeRatio,
+    height: config.item.height_default * ratio * fieldSizeRatio
+  }
+
+  for (let column = 0; column < field.size; column++) {
+    const fieldColumn = new Container();
+
+    for (let row = 0; row < field.size; row++) {
+      const item = new Item(column, row, itemSize);
+      fieldColumn.addChild(item);
+    }
+
+    field.addChild(fieldColumn);
+  }
+
+
+
+  // Func for creating new game field item
+  function Item(column, row, itemSize) {
+
+    // Get random item
+    const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
+
+    const item = new Sprite(loader.resources[itemColor].texture);
+
+    item.column = column;
+    item.row = row;
+
+    item.scale.set(config.item.width_default / item.width * ratio * fieldSizeRatio);
+    item.x = itemSize.width * (column + 0.5);
+    item.y = itemSize.height * (field.size - 1 - row + 0.5);
+    item.anchor.set(.5);
+
+    item.interactive = true;
+    item.buttonMOde = true;
+    item.on('pointerdown', handleClick);
+
+    return item;
+  }
 }
 
 
