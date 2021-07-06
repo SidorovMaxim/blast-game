@@ -12,9 +12,9 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.(?:ico|gif|png|jpg|jpeg)$/i, type: 'asset/resource'},
+      { test: /\.(png|svg|jpg|jpeg|gif)$/i, type: 'asset/resource' },
+      { test: /\.(woff|woff2|eot|ttf|otf)$/i, type: 'asset/resource' },
       { test: /\.svg$/, use: 'svg-inline-loader' },
-      { test: /\.css$/, use: 'css-loader' },
       { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] },
       { test: /\.(js)$/, use: 'babel-loader' }
     ]
