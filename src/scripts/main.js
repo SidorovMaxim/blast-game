@@ -126,7 +126,16 @@ function setup() {
   // Change game field if player clicks on any item
   function changeField(item) {
     (function hideItems(item) {
-      hideWithAnimation(item);
+      item.hidden = true;
+
+      animate({
+        duration: 200,
+        action: 'hide',
+        draw(progress, hidingItem) {
+          hidingItem.width = itemSize.width * (1 - progress);
+          hidingItem.height = itemSize.height * (1 - progress);
+        }
+      }, item);
 
       const nearbyItems = {
         top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
@@ -139,23 +148,8 @@ function setup() {
         const nearbyItem = nearbyItems[key];
 
         if (nearbyItem && !nearbyItem.hidden && nearbyItem.texture === item.texture) {
-          hideWithAnimation(nearbyItem);
           hideItems(nearbyItem);
         }
-      }
-
-      function hideWithAnimation(hiddenItem) {
-        item.hidden = true;
-
-        const endScale = 0.01;
-
-        const interval = setInterval(() => {
-          if (hiddenItem.scale.x > endScale) {
-            hiddenItem.scale.set(hiddenItem.scale.x * (1 - 0.1));
-          } else {
-            clearInterval(interval);
-          }
-        }, 20);
       }
     })(item);
 
