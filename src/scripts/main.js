@@ -122,6 +122,25 @@ function setup() {
   }
 
 
+  // Change game field if player clicks on any item
+  function changeField(item) {
+    (function hideItems(item) {
+      hideWithAnimation(item);
+
+      function hideWithAnimation(hiddenItem) {
+        item.hidden = true;
+
+        const endScale = 0.01;
+
+        const interval = setInterval(() => {
+          if (hiddenItem.scale.x > endScale) {
+            hiddenItem.scale.set(hiddenItem.scale.x * (1 - 0.1));
+          } else {
+            clearInterval(interval);
+          }
+        }, 20);
+      }
+    })(item);
   // Func for creating new game field item
   function Item(column, row, itemSize) {
 
