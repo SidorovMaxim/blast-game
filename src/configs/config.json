@@ -1,7 +1,12 @@
 {
   "field": {
     "position_default": {"x": 100, "y": 267},
+    "size_default": 9,
     "size": 9,
     "numOfColors": 5
+  },
+  "item": {
+    "width_default": 93,
+    "height_default": 104
   }
 }

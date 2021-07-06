@@ -92,6 +92,7 @@ function setup() {
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
   field.size = config.field.size;
+  field.size_default = config.field.size_default;
   field.numOfColors = config.field.numOfColors;
   gameScene.addChild(field);
 
