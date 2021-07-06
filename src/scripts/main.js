@@ -157,6 +157,26 @@ function setup() {
         }, 20);
       }
     })(item);
+
+
+    (function createItems() {
+      for (let column = 0; column < field.size; column++) {
+        const fieldColumn = field.children[column];
+        let numOfNewItems = 0;
+
+        for (let row = 0; row < field.size; row++) {
+          if (fieldColumn.children[row].hidden) {
+            numOfNewItems++;
+          };
+        }
+
+        for (let row = field.size; row < field.size + numOfNewItems; row++) {
+          const item = new Item(column, row, itemSize);
+          fieldColumn.addChild(item);
+        }
+      }
+    })();
+
   // Func for creating new game field item
   function Item(column, row, itemSize) {
 
