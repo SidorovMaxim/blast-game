@@ -146,17 +146,8 @@ function setup() {
 
   // Change game field if player clicks on any item
   function changeField(item) {
-    (function hideItems(item) {
-      item.hidden = true;
-
-      animate({
-        duration: 200,
-        action: 'hide',
-        draw(progress, hidingItem) {
-          hidingItem.width = itemSize.width * (1 - progress);
-          hidingItem.height = itemSize.height * (1 - progress);
-        }
-      }, item);
+    (function hideItems(item, first) {
+      if (!first) hideCurrentItem(item);
 
       const nearbyItems = {
         top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
@@ -166,13 +157,25 @@ function setup() {
       };
 
       for (let key in nearbyItems) {
-        const nearbyItem = nearbyItems[key];
-
-        if (nearbyItem && !nearbyItem.hidden && nearbyItem.texture === item.texture) {
-          hideItems(nearbyItem);
+        if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
+          if (first && !item.hidden) hideCurrentItem(item);
+          hideItems(nearbyItems[key]);
         }
       }
-    })(item);
+
+      function hideCurrentItem(item) {
+        item.hidden = true;
+
+        animate({
+          duration: 200,
+          action: 'hide',
+          draw(progress, hidingItem) {
+            hidingItem.width = itemSize.width * (1 - progress);
+            hidingItem.height = itemSize.height * (1 - progress);
+          }
+        }, item);
+      }
+    })(item, true);
 
 
     (function createItems() {
