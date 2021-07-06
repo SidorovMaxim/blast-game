@@ -1,5 +1,6 @@
 {
   "field": {
+    "position_default": {"x": 100, "y": 267},
     "size": 9,
     "numOfColors": 5
   }
