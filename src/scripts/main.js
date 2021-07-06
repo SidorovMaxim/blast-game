@@ -127,6 +127,22 @@ function setup() {
     (function hideItems(item) {
       hideWithAnimation(item);
 
+      const nearbyItems = {
+        top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+        right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+        bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+        left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+      };
+
+      for (let key in nearbyItems) {
+        const nearbyItem = nearbyItems[key];
+
+        if (nearbyItem && !nearbyItem.hidden && nearbyItem.texture === item.texture) {
+          hideWithAnimation(nearbyItem);
+          hideItems(nearbyItem);
+        }
+      }
+
       function hideWithAnimation(hiddenItem) {
         item.hidden = true;
 
