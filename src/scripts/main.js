@@ -35,3 +35,9 @@ let app = new Application({
 });
 
 document.body.appendChild(app.view);
+
+loader
+  .add(bgImg)
+  .add(boxes)
+  .load(setup);
+
