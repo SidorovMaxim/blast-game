@@ -1,5 +1,5 @@
 # Blast game
 
-### start: `npx webpack serve`
+### start: `npm run start`
 
 ### build: `npm run build`
