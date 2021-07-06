@@ -86,6 +86,15 @@ function setup() {
     gameScene.addChild(header);
   }
 
+
+  // Create game field
+  const field = new Container();
+  field.x = config.field.position_default.x * ratio;
+  field.y = config.field.position_default.y * ratio;
+  field.size = config.field.size;
+  field.numOfColors = config.field.numOfColors;
+  gameScene.addChild(field);
+
 }
 
 
