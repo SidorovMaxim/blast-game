@@ -200,7 +200,24 @@ function setup() {
         }
       }
     })();
+    
+    setTimeout(() => {
+      (function removeHiddenItems() {
+        for (let column = 0; column < field.size; column++) {
+          const fieldColumn = field.children[column];
 
+          for (let row = field.size - 1; row >= 0; row--) {
+            if (fieldColumn.children[row].hidden) {
+              fieldColumn.removeChild(fieldColumn.children[row]);
+            }
+          }
+        }
+      })();
+
+      field.locked = false;
+    }, 500);
+
+  }
 
 
   // Func for creating new game field item
