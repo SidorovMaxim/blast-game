@@ -177,6 +177,39 @@ function setup() {
       }
     })();
 
+
+    (function moveItems() {
+      for (let column = 0; column < field.size; column++) {
+        const fieldColumn = field.children[column];
+        let numOfMoves = 0;
+
+        for (let row = 0; row < fieldColumn.children.length; row++) {
+          if (fieldColumn.children[row].hidden) {
+            numOfMoves++;
+          } else {
+            if (numOfMoves) {
+              moveWithAnimation(fieldColumn.children[row], numOfMoves);
+            }
+          }
+        }
+      }
+
+      function moveWithAnimation(movingItem, numOfMoves) {
+        const endY = Math.round(movingItem.y + itemSize.height * numOfMoves);
+
+        const interval = setInterval(() => {
+          if (Math.round(movingItem.y) < endY) {
+            movingItem.y += itemSize.height / 10;
+          } else {
+            clearInterval(interval);
+          }       
+        }, 10);
+
+        // Set new row value of moving item
+        movingItem.row -= numOfMoves;
+      }
+    })();
+    
   // Func for creating new game field item
   function Item(column, row, itemSize) {
 
