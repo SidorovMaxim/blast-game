@@ -27,3 +27,11 @@ const ASPECT_RATIO = 1.41;
 let windowHeight = window.innerHeight;
 let ratio = +(windowHeight / HEIGHT_DEFAULT).toFixed(3);
 
+
+let app = new Application({
+  width: windowHeight * ASPECT_RATIO,
+  height: windowHeight,
+  backgroundColor: '0xb3b3b3'
+});
+
+document.body.appendChild(app.view);
