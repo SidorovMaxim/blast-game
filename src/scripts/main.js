@@ -56,6 +56,22 @@ function setup() {
   bg.y = 0;
   gameScene.addChild(bg);
 
+
+  // Create headers text
+  const headers = [
+    {
+      text: 'ПРОГРЕСС',
+      position: {x: 786, y: 5}
+    },
+    {
+      text: 'ХОДЫ:',
+      position: {x: 1430, y: 240}
+    },
+    {
+      text: 'ОЧКИ:',
+      position: {x: 1430, y: 650}
+    }
+  ];
 }
 
 
