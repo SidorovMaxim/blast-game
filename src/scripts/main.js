@@ -1,5 +1,6 @@
 import '../main.css';
 import * as PIXI  from 'pixi.js';
+import animate    from './animate.js';
 import config     from '../configs/config.json';
 import bgImg      from '../assets/backgrounds/background.png';
 import blue       from '../assets/boxes/blue.png';
