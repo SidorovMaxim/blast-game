@@ -185,32 +185,30 @@ function setup() {
         let numOfMoves = 0;
 
         for (let row = 0; row < fieldColumn.children.length; row++) {
-          if (fieldColumn.children[row].hidden) {
+          const item = fieldColumn.children[row];
+
+          if (item.hidden) {
             numOfMoves++;
           } else {
             if (numOfMoves) {
-              moveWithAnimation(fieldColumn.children[row], numOfMoves);
+              // Set new row value of moving item
+              item.row -= numOfMoves;
+
+              animate({
+                duration: 500,
+                action: 'move',
+                draw(progress, movingItem, initY, numOfMoves) {
+                  movingItem.y = initY + itemSize.height * numOfMoves * progress;
+                }
+              }, item, item.y, numOfMoves);
             }
           }
         }
       }
-
-      function moveWithAnimation(movingItem, numOfMoves) {
-        const endY = Math.round(movingItem.y + itemSize.height * numOfMoves);
-
-        const interval = setInterval(() => {
-          if (Math.round(movingItem.y) < endY) {
-            movingItem.y += itemSize.height / 10;
-          } else {
-            clearInterval(interval);
-          }       
-        }, 10);
-
-        // Set new row value of moving item
-        movingItem.row -= numOfMoves;
-      }
     })();
-    
+
+
+
   // Func for creating new game field item
   function Item(column, row, itemSize) {
 
