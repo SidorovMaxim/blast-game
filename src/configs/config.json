@@ -18,4 +18,14 @@
   "result": {
     "position_default": {"x": 530, "y": 737}
   },
+  "levels": [
+    {
+      "score": 3000,
+      "moves": 20,
+      "field": {
+        "size": 9,
+        "numOfColors": 3
+      }
+    }
+  ]
 }
