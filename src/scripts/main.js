@@ -159,16 +159,34 @@ function Field(score) {
   return field;
 }
 
+
+// Func for changing game field if player clicked on any item
+function changeField(field, score, item) {
+  let aloneItem = true;
+  let hiddenItems = 0;
+
+  // Hide clicked item and nerby items with same texture
+  hideItems(field, item, {isClickedItem: true});
+
+  // Unlocked field and interrupt if only one item
+  if (aloneItem) {
+    field.locked = false;
+    return;
   }
 
+  // Continue if item is not alone
 
   // Change game field if player clicks on any item
   function changeField(item) {
     (function hideItems(item, first) {
       let onlyOne = true;
+    // Calculate score based on num of hidden items
+    calculateScore(score, hiddenItems);
 
       (function hideItemsRecursive(item, first) {
         if (!first) hideWithAnimation(item);
+    // Create new items based on num of hidden items in each column
+    createItems(field, score);
 
         const nearbyItems = {
           top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
@@ -176,6 +194,8 @@ function Field(score) {
           bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
           left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
         };
+    // Move items with empty space below in them column
+    moveItems(field);
 
         for (let key in nearbyItems) {
           if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
@@ -183,14 +203,24 @@ function Field(score) {
               onlyOne = false;
               hideWithAnimation(item);
             } 
+    setTimeout(() => {
+      // Remove hidden items when animation is over
+      removeHiddenItems(field);
 
             hideItemsRecursive(nearbyItems[key]);
           } 
         }
       })(item, first);
+      // 
+      checkPossibleProgress(field);
+    }, 200);
 
       function hideWithAnimation(item) {
         item.hidden = true;
+    // Unlock field
+    setTimeout(() => {
+      field.locked = false;
+    }, 500);
 
         animate({
           duration: 200,
