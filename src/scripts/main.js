@@ -287,8 +287,12 @@ function changeField(field, score, moves, item) {
 
     // Unlock field
     setTimeout(() => {
-      // 
-      checkPossibleProgress(field, score);
+      checkGameState(score, moves, result);
+
+      if (result.text) return;
+
+      // Сheck the existence of paired items with same texture
+      checkPossibleProgress(field, score, moves, result);
 
       field.locked = false;
     }, 500);
@@ -391,6 +395,27 @@ function changeField(field, score, moves, item) {
           field.children[column].removeChild(field.children[column].children[row]);
         }
       }
+    }
+  }
+
+
+  function checkGameState(score, moves, result) {
+    if (+score.text >= score.target) {
+      field.removeChildren();
+      result.text = 'You won!';
+
+      const interval = setInterval(() => {
+        if (+moves.text) {
+          score.text = +score.text + 1000;
+          moves.text--;
+        } else {
+          clearInterval(interval);
+        }
+      }, 500);
+
+    } else if (!+moves.text) {
+      field.removeChildren();
+      result.text = 'You lose';
     }
   }
 }
