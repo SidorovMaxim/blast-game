@@ -110,6 +110,11 @@ function setup() {
 
 
   // Create game field
+  const field = new Field(score);
+  gameScene.addChild(field);
+}
+
+
 // Handlers
 function handleClick(field, score, event) {
   if (!field.locked) {
