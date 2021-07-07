@@ -128,31 +128,6 @@ function handleClick(field, score, event) {
 }
 
 
-// Func for creating new game field item
-function Item(column, row, field, score) {
-
-  // Get random item
-  const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
-
-  // Create sprite
-  const item = new Sprite(loader.resources[itemColor].texture);
-
-  item.column = column;
-  item.row = row;
-
-  item.scale.set(config.item.width_default / item.width * ratio * field.sizeRatio);
-  item.x = field.itemSize.width * (column + 0.5);
-  item.y = field.itemSize.height * (field.size - 1 - row + 0.5);
-  item.anchor.set(.5);
-
-  item.interactive = true;
-  item.buttonMOde = true;
-  item.on('pointerdown', handleClick.bind(null, field, score));
-
-  return item;
-}
-
-
 // Func for creating new game field
 function Field(score) {
   const field = new Container();
@@ -192,6 +167,61 @@ function Items(field, score) {
   }
 
   return items;
+}
+
+
+// Func for creating new game field item
+function Item(column, row, field, score) {
+
+  // Get random item
+  const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
+
+  // Create sprite
+  const item = new Sprite(loader.resources[itemColor].texture);
+
+  item.column = column;
+  item.row = row;
+
+  item.scale.set(config.item.width_default / item.width * ratio * field.sizeRatio);
+  item.x = field.itemSize.width * (column + 0.5);
+  item.y = field.itemSize.height * (field.size - 1 - row + 0.5);
+  item.anchor.set(.5);
+
+  item.interactive = true;
+  item.buttonMOde = true;
+  item.on('pointerdown', handleClick.bind(null, field, score));
+
+  return item;
+}
+
+
+function checkPossibleProgress(field, score) {
+  for (let column = 0; column < field.size; column++) {
+    for (let row = 0; row < field.size; row++) {
+      const item = field.children[column].children[row];
+
+      const nearbyItems = {
+        top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+        right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+        bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+        left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+      };
+
+      for (let key in nearbyItems) {
+        // If possible, finish searching for paired items
+        if (nearbyItems[key] && nearbyItems[key].texture === item.texture) return;
+      }
+    }
+  }
+
+  // If no pair of items
+  (function shuffleItems(field) {
+    // Remove all current items
+    field.removeChildren();
+
+    // Add new items
+    field.addChild(...Items(field, score));
+  })(field);
 }
 
 
@@ -321,36 +351,6 @@ function changeField(field, score, item) {
         }
       }
     }
-  }
-  
-  
-  function checkPossibleProgress(field) {
-    for (let column = 0; column < field.size; column++) {
-
-      for (let row = 0; row < field.size; row++) {
-        const item = field.children[column].children[row];
-
-        const nearbyItems = {
-          top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
-          right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
-          bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
-          left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
-        };
-
-        for (let key in nearbyItems) {
-          // If possible, finish searching for paired items
-          if (nearbyItems[key] && nearbyItems[key].texture === item.texture) return;
-        }
-      }
-    }
-
-    // No pair of items
-    // Change all items on game field
-    // Remove all current items
-    field.removeChildren();
-
-    // Add new items
-    field.addChild(...Items(field, score));
   }
 
 
