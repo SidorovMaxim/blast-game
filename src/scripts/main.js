@@ -147,6 +147,9 @@ function Field(score) {
   // Add new items on game field
   field.addChild(...Items(field, score));
 
+  // Сheck the existence of paired items with same texture
+  checkPossibleProgress(field, score);
+
   return field;
 }
 
@@ -195,6 +198,7 @@ function Item(column, row, field, score) {
 }
 
 
+// Func for checking the existence of paired items with same texture
 function checkPossibleProgress(field, score) {
   for (let column = 0; column < field.size; column++) {
     for (let row = 0; row < field.size; row++) {
@@ -221,6 +225,9 @@ function checkPossibleProgress(field, score) {
 
     // Add new items
     field.addChild(...Items(field, score));
+
+    // Recursive check
+    checkPossibleProgress(field, score);
   })(field);
 }
 
