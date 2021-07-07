@@ -282,17 +282,38 @@ function Field(score) {
 
     item.column = column;
     item.row = row;
+  function checkPossibleProgress(field) {
+    for (let column = 0; column < field.size; column++) {
 
     item.scale.set(config.item.width_default / item.width * ratio * fieldSizeRatio);
     item.x = itemSize.width * (column + 0.5);
     item.y = itemSize.height * (field.size - 1 - row + 0.5);
     item.anchor.set(.5);
+      for (let row = 0; row < field.size; row++) {
+        const item = field.children[column].children[row];
 
     item.interactive = true;
     item.buttonMOde = true;
     item.on('pointerdown', handleClick);
+        const nearbyItems = {
+          top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+          right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+          bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+          left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+        };
 
     return item;
+        for (let key in nearbyItems) {
+          // If possible, finish searching for paired items
+          if (nearbyItems[key] && nearbyItems[key].texture === item.texture) return;
+        }
+      }
+    }
+
+    // No pair of items
+    console.log('new field');
+    field = new Field(score);
+    
   }
 }
 
