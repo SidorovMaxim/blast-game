@@ -140,30 +140,42 @@ function setup() {
 
   // Handlers
   function handleClick(event) {
-    changeField(event.target);
+    if (!field.locked) {
+      field.locked = true;
+      score.text = +score.text + 10;
+      changeField(event.target);
+    }
   }
 
 
   // Change game field if player clicks on any item
   function changeField(item) {
     (function hideItems(item, first) {
-      if (!first) hideCurrentItem(item);
+      let onlyOne = true;
 
-      const nearbyItems = {
-        top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
-        right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
-        bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
-        left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
-      };
+      (function hideItemsRecursive(item, first) {
+        if (!first) hideWithAnimation(item);
 
-      for (let key in nearbyItems) {
-        if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
-          if (first && !item.hidden) hideCurrentItem(item);
-          hideItems(nearbyItems[key]);
+        const nearbyItems = {
+          top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+          right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+          bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+          left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+        };
+
+        for (let key in nearbyItems) {
+          if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
+            if (first && !item.hidden) {
+              onlyOne = false;
+              hideWithAnimation(item);
+            } 
+
+            hideItemsRecursive(nearbyItems[key]);
+          } 
         }
-      }
+      })(item, first);
 
-      function hideCurrentItem(item) {
+      function hideWithAnimation(item) {
         item.hidden = true;
 
         animate({
@@ -175,10 +187,16 @@ function setup() {
           }
         }, item);
       }
+
+      if (!onlyOne) {
+        createItems();
+      } else {
+        field.locked = false;
+      }
     })(item, true);
 
 
-    (function createItems() {
+    function createItems() {
       for (let column = 0; column < field.size; column++) {
         const fieldColumn = field.children[column];
         let numOfNewItems = 0;
@@ -194,10 +212,12 @@ function setup() {
           fieldColumn.addChild(item);
         }
       }
-    })();
+
+      moveItems();
+    }
 
 
-    (function moveItems() {
+    function moveItems() {
       for (let column = 0; column < field.size; column++) {
         const fieldColumn = field.children[column];
         let numOfMoves = 0;
@@ -223,10 +243,13 @@ function setup() {
           }
         }
       }
-    })();
+
+      removeHiddenItems();
+    }
     
-    setTimeout(() => {
-      (function removeHiddenItems() {
+    
+    function removeHiddenItems() {
+      setTimeout(() => {
         for (let column = 0; column < field.size; column++) {
           const fieldColumn = field.children[column];
 
@@ -236,11 +259,10 @@ function setup() {
             }
           }
         }
-      })();
 
-      field.locked = false;
-    }, 500);
-
+        field.locked = false;
+      }, 500);
+    }
   }
 
 
