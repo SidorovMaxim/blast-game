@@ -345,9 +345,12 @@ function changeField(field, score, item) {
     }
 
     // No pair of items
-    console.log('new field');
-    field = new Field(score);
-    
+    // Change all items on game field
+    // Remove all current items
+    field.removeChildren();
+
+    // Add new items
+    field.addChild(...Items(field, score));
   }
 
 
