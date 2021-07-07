@@ -155,21 +155,30 @@ function Item(column, row, field, score) {
 
 // Func for creating new game field
 function Field(score) {
-
-  // Create game field
   const field = new Container();
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
+
   field.size = config.field.size;
   field.size_default = config.field.size_default;
-  field.numOfColors = config.field.numOfColors;
 
-  // Create game field items
+  field.numOfColors = config.field.numOfColors;
   field.sizeRatio = field.size_default / field.size;
   field.itemSize = {
     width: config.item.width_default * ratio * field.sizeRatio,
     height: config.item.height_default * ratio * field.sizeRatio
   }
+
+  // Add new items on game field
+  field.addChild(...Items(field, score));
+
+  return field;
+}
+
+
+// Func for creating new game field items
+function Items(field, score) {
+  let items = [];
 
   for (let column = 0; column < field.size; column++) {
     const fieldColumn = new Container();
@@ -179,10 +188,10 @@ function Field(score) {
       fieldColumn.addChild(item);
     }
 
-    field.addChild(fieldColumn);
+    items.push(fieldColumn);
   }
 
-  return field;
+  return items;
 }
 
 
