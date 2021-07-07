@@ -110,6 +110,16 @@ function setup() {
 
 
   // Create game field
+// Handlers
+function handleClick(field, score, event) {
+  if (!field.locked) {
+    // Lock field
+    field.locked = true;
+
+    // Change field based on clicked item
+    changeField(field, score, event.target);
+  }
+}
 
 
 // Func for creating new game field
@@ -144,13 +154,6 @@ function Field(score) {
   return field;
 }
 
-  // Handlers
-  function handleClick(event) {
-    if (!field.locked) {
-      field.locked = true;
-      score.text = +score.text + 10;
-      changeField(event.target);
-    }
   }
 
 
