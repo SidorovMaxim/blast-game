@@ -1,4 +1,4 @@
-# Blast game: https://sidorovmaxim.github.io/blast-game/
+# Blast game: [ghpages](https://sidorovmaxim.github.io/blast-game/)
 
 ### start: `npm run start`
 
