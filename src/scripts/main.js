@@ -223,13 +223,13 @@ function changeField(field, score, item) {
     setTimeout(() => {
       // Remove hidden items when animation is over
       removeHiddenItems(field);
-
-      // 
-      checkPossibleProgress(field);
     }, 200);
 
     // Unlock field
     setTimeout(() => {
+      // 
+      checkPossibleProgress(field, score);
+
       field.locked = false;
     }, 500);
 
