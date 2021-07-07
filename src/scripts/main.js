@@ -110,33 +110,39 @@ function setup() {
 
 
   // Create game field
+
+
+// Func for creating new game field
+function Field(score) {
+
+  // Create game field
   const field = new Container();
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
   field.size = config.field.size;
   field.size_default = config.field.size_default;
   field.numOfColors = config.field.numOfColors;
-  gameScene.addChild(field);
-
 
   // Create game field items
-  const fieldSizeRatio = field.size_default / field.size;
-  const itemSize = {
-    width: config.item.width_default * ratio * fieldSizeRatio,
-    height: config.item.height_default * ratio * fieldSizeRatio
+  field.sizeRatio = field.size_default / field.size;
+  field.itemSize = {
+    width: config.item.width_default * ratio * field.sizeRatio,
+    height: config.item.height_default * ratio * field.sizeRatio
   }
 
   for (let column = 0; column < field.size; column++) {
     const fieldColumn = new Container();
 
     for (let row = 0; row < field.size; row++) {
-      const item = new Item(column, row, itemSize);
+      const item = new Item(column, row, field, score);
       fieldColumn.addChild(item);
     }
 
     field.addChild(fieldColumn);
   }
 
+  return field;
+}
 
   // Handlers
   function handleClick(event) {
