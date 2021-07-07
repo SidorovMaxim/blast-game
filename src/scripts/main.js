@@ -259,6 +259,9 @@ function changeField(field, score, item) {
 
       moveItems();
     }
+  function calculateScore(score, hiddenItems) {
+    score.text = +score.text + Math.pow(hiddenItems, 2);
+  }
 
 
     function moveItems() {
