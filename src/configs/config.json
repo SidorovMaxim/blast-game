@@ -14,5 +14,8 @@
   "item": {
     "width_default": 93,
     "height_default": 104
-  }
+  },
+  "result": {
+    "position_default": {"x": 530, "y": 737}
+  },
 }

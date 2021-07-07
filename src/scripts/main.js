@@ -32,7 +32,8 @@ let ratio = +(windowHeight / HEIGHT_DEFAULT).toFixed(3);
 let app = new Application({
   width: windowHeight * ASPECT_RATIO,
   height: windowHeight,
-  backgroundColor: '0xb3b3b3'
+  backgroundColor: '0xb3b3b3',
+  antialias: true
 });
 
 document.body.appendChild(app.view);
@@ -42,6 +43,8 @@ loader
   .add(boxes)
   .load(setup);
 
+
+let level = 0;
 
 // Start new game
 function setup() {
@@ -89,6 +92,25 @@ function setup() {
   }
 
 
+  // Create result container
+  const resultContainer = new Container();
+  resultContainer.x = config.result.position_default.x * ratio;
+  resultContainer.y = config.result.position_default.y * ratio;
+  gameScene.addChild(resultContainer);
+
+  // Create result text style
+  const resultStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 115 * ratio,
+    fill: 'white'
+  });
+
+  // Create result text
+  const result = new Text('', resultStyle);
+  result.anchor.set(.5);
+  resultContainer.addChild(result);
+
+
   // Create moves container
   const movesContainer = new Container();
   movesContainer.x = config.moves.position_default.x * ratio;
@@ -105,8 +127,6 @@ function setup() {
   // Create moves text
   const moves = new Text(config.levels[level].moves, movesStyle);
   moves.anchor.set(.5);
-  moves.x = -moves.width / 2;
-  moves.x = -moves.height / 2;
   movesContainer.addChild(moves);
 
 
@@ -125,32 +145,31 @@ function setup() {
 
   // Create score text
   const score = new Text('0', scoreStyle);
+  score.target = config.levels[level].score;
   score.anchor.set(.5);
-  score.x = -score.width / 2;
-  score.x = -score.height / 2;
   scoreContainer.addChild(score);
 
 
   // Create game field
-  const field = new Field(score, moves);
+  const field = new Field(score, moves, result);
   gameScene.addChild(field);
 }
 
 
 // Handlers
-function handleClick(field, score, moves, event) {
+function handleClick(field, score, moves, result, event) {
   if (!field.locked) {
     // Lock field
     field.locked = true;
 
     // Change field based on clicked item
-    changeField(field, score, moves, event.target);
+    changeField(field, score, moves, result, event.target);
   }
 }
 
 
 // Func for creating new game field
-function Field(score, moves) {
+function Field(score, moves, result) {
   const field = new Container();
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
@@ -166,24 +185,24 @@ function Field(score, moves) {
   }
 
   // Add new items on game field
-  field.addChild(...Items(field, score, moves));
+  field.addChild(...Items(field, score, moves, result));
 
   // Сheck the existence of paired items with same texture
-  checkPossibleProgress(field, score, moves);
+  checkPossibleProgress(field, score, moves, result);
 
   return field;
 }
 
 
 // Func for creating new game field items
-function Items(field, score, moves) {
+function Items(field, score, moves, result) {
   let items = [];
 
   for (let column = 0; column < field.size; column++) {
     const fieldColumn = new Container();
 
     for (let row = 0; row < field.size; row++) {
-      const item = new Item(column, row, field, score, moves);
+      const item = new Item(column, row, field, score, moves, result);
       fieldColumn.addChild(item);
     }
 
@@ -195,7 +214,7 @@ function Items(field, score, moves) {
 
 
 // Func for creating new game field item
-function Item(column, row, field, score, moves) {
+function Item(column, row, field, score, moves, result) {
 
   // Get random item
   const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
@@ -213,14 +232,14 @@ function Item(column, row, field, score, moves) {
 
   item.interactive = true;
   item.buttonMOde = true;
-  item.on('pointerdown', handleClick.bind(null, field, score, moves));
+  item.on('pointerdown', handleClick.bind(null, field, score, moves, result));
 
   return item;
 }
 
 
 // Func for checking the existence of paired items with same texture
-function checkPossibleProgress(field, score, moves) {
+function checkPossibleProgress(field, score, moves, result) {
   for (let column = 0; column < field.size; column++) {
     for (let row = 0; row < field.size; row++) {
       const item = field.children[column].children[row];
@@ -245,16 +264,16 @@ function checkPossibleProgress(field, score, moves) {
     field.removeChildren();
 
     // Add new items
-    field.addChild(...Items(field, score, moves));
+    field.addChild(...Items(field, score, moves, result));
 
     // Recursive check
-    checkPossibleProgress(field, score, moves);
+    checkPossibleProgress(field, score, moves, result);
   })(field);
 }
 
 
 // Func for changing game field if player clicked on any item
-function changeField(field, score, moves, item) {
+function changeField(field, score, moves, result, item) {
   let aloneItem = true;
   let hiddenItems = 0;
 
@@ -353,7 +372,7 @@ function changeField(field, score, moves, item) {
       }
 
       for (let row = field.size; row < field.size + numOfNewItems; row++) {
-        const item = new Item(column, row, field, score, moves);
+        const item = new Item(column, row, field, score, moves, result);
         field.children[column].addChild(item);
       }
     }
