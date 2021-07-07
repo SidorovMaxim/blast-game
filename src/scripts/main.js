@@ -43,6 +43,7 @@ loader
   .load(setup);
 
 
+// Start new game
 function setup() {
 
   // Create game scene
@@ -127,6 +128,31 @@ function handleClick(field, score, event) {
 }
 
 
+// Func for creating new game field item
+function Item(column, row, field, score) {
+
+  // Get random item
+  const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
+
+  // Create sprite
+  const item = new Sprite(loader.resources[itemColor].texture);
+
+  item.column = column;
+  item.row = row;
+
+  item.scale.set(config.item.width_default / item.width * ratio * field.sizeRatio);
+  item.x = field.itemSize.width * (column + 0.5);
+  item.y = field.itemSize.height * (field.size - 1 - row + 0.5);
+  item.anchor.set(.5);
+
+  item.interactive = true;
+  item.buttonMOde = true;
+  item.on('pointerdown', handleClick.bind(null, field, score));
+
+  return item;
+}
+
+
 // Func for creating new game field
 function Field(score) {
 
@@ -176,166 +202,125 @@ function changeField(field, score, item) {
 
   // Continue if item is not alone
 
-  // Change game field if player clicks on any item
-  function changeField(item) {
-    (function hideItems(item, first) {
-      let onlyOne = true;
     // Calculate score based on num of hidden items
     calculateScore(score, hiddenItems);
 
-      (function hideItemsRecursive(item, first) {
-        if (!first) hideWithAnimation(item);
     // Create new items based on num of hidden items in each column
     createItems(field, score);
 
-        const nearbyItems = {
-          top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
-          right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
-          bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
-          left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
-        };
     // Move items with empty space below in them column
     moveItems(field);
 
-        for (let key in nearbyItems) {
-          if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
-            if (first && !item.hidden) {
-              onlyOne = false;
-              hideWithAnimation(item);
-            } 
     setTimeout(() => {
       // Remove hidden items when animation is over
       removeHiddenItems(field);
 
-            hideItemsRecursive(nearbyItems[key]);
-          } 
-        }
-      })(item, first);
       // 
       checkPossibleProgress(field);
     }, 200);
 
-      function hideWithAnimation(item) {
-        item.hidden = true;
     // Unlock field
     setTimeout(() => {
       field.locked = false;
     }, 500);
 
-        animate({
-          duration: 200,
-          action: 'hide',
-          draw(progress, hidingItem) {
-            hidingItem.width = itemSize.width * (1 - progress);
-            hidingItem.height = itemSize.height * (1 - progress);
-          }
-        }, item);
+
+  function hideItems(field, item, isClickedItem) {
+    (function hideItemsRecursive(item, isClickedItem) {
+      if (!isClickedItem) hideWithAnimation(item);
+
+      const nearbyItems = {
+        top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+        right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+        bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+        left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+      };
+
+      for (let key in nearbyItems) {
+        if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
+          if (isClickedItem && !item.hidden) {
+            aloneItem = false;
+            hideWithAnimation(item);
+          } 
+
+          hideItemsRecursive(nearbyItems[key]);
+        } 
       }
+    })(item, isClickedItem);
 
-      if (!onlyOne) {
-        createItems();
-      } else {
-        field.locked = false;
-      }
-    })(item, true);
+    function hideWithAnimation(item) {
+      item.hidden = true;
+      hiddenItems++;
 
-
-    function createItems() {
-      for (let column = 0; column < field.size; column++) {
-        const fieldColumn = field.children[column];
-        let numOfNewItems = 0;
-
-        for (let row = 0; row < field.size; row++) {
-          if (fieldColumn.children[row].hidden) {
-            numOfNewItems++;
-          };
+      animate({
+        duration: 200,
+        action: 'hide',
+        draw(progress, hidingItem) {
+          hidingItem.width = field.itemSize.width * (1 - progress);
+          hidingItem.height = field.itemSize.height * (1 - progress);
         }
-
-        for (let row = field.size; row < field.size + numOfNewItems; row++) {
-          const item = new Item(column, row, itemSize);
-          fieldColumn.addChild(item);
-        }
-      }
-
-      moveItems();
+      }, item);
     }
+  }
+
+
   function calculateScore(score, hiddenItems) {
     score.text = +score.text + Math.pow(hiddenItems, 2);
   }
 
 
-    function moveItems() {
-      for (let column = 0; column < field.size; column++) {
-        const fieldColumn = field.children[column];
-        let numOfMoves = 0;
+  function createItems(field, score) {
+    for (let column = 0; column < field.size; column++) {
+      let numOfNewItems = 0;
 
-        for (let row = 0; row < fieldColumn.children.length; row++) {
-          const item = fieldColumn.children[row];
-
-          if (item.hidden) {
-            numOfMoves++;
-          } else {
-            if (numOfMoves) {
-              // Set new row value of moving item
-              item.row -= numOfMoves;
-
-              animate({
-                duration: 500,
-                action: 'move',
-                draw(progress, movingItem, initY, numOfMoves) {
-                  movingItem.y = initY + itemSize.height * numOfMoves * progress;
-                }
-              }, item, item.y, numOfMoves);
-            }
-          }
+      for (let row = 0; row < field.size; row++) {
+        if (field.children[column].children[row].hidden) {
+          numOfNewItems++;
         }
       }
 
-      removeHiddenItems();
-    }
-    
-    
-    function removeHiddenItems() {
-      setTimeout(() => {
-        for (let column = 0; column < field.size; column++) {
-          const fieldColumn = field.children[column];
-
-          for (let row = field.size - 1; row >= 0; row--) {
-            if (fieldColumn.children[row].hidden) {
-              fieldColumn.removeChild(fieldColumn.children[row]);
-            }
-          }
-        }
-
-        field.locked = false;
-      }, 500);
+      for (let row = field.size; row < field.size + numOfNewItems; row++) {
+        const item = new Item(column, row, field, score);
+        field.children[column].addChild(item);
+      }
     }
   }
 
 
-  // Func for creating new game field item
-  function Item(column, row, itemSize) {
+  function moveItems() {
+    for (let column = 0; column < field.size; column++) {
+      let numOfMoves = 0;
 
-    // Get random item
-    const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
+      for (let row = 0; row < field.children[column].children.length; row++) {
+        const item = field.children[column].children[row];
 
-    const item = new Sprite(loader.resources[itemColor].texture);
+        if (item.hidden) {
+          numOfMoves++;
+        } else {
+          if (numOfMoves) {
+            // Set new row value of moving item
+            item.row -= numOfMoves;
 
-    item.column = column;
-    item.row = row;
+            animate({
+              duration: 500,
+              action: 'move',
+              draw(progress, movingItem, initY, numOfMoves) {
+                movingItem.y = initY + field.itemSize.height * numOfMoves * progress;
+              }
+            }, item, item.y, numOfMoves);
+          }
+        }
+      }
+    }
+  }
+  
+  
   function checkPossibleProgress(field) {
     for (let column = 0; column < field.size; column++) {
 
-    item.scale.set(config.item.width_default / item.width * ratio * fieldSizeRatio);
-    item.x = itemSize.width * (column + 0.5);
-    item.y = itemSize.height * (field.size - 1 - row + 0.5);
-    item.anchor.set(.5);
       for (let row = 0; row < field.size; row++) {
         const item = field.children[column].children[row];
 
-    item.interactive = true;
-    item.buttonMOde = true;
-    item.on('pointerdown', handleClick);
         const nearbyItems = {
           top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
           right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
@@ -343,7 +328,6 @@ function changeField(field, score, item) {
           left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
         };
 
-    return item;
         for (let key in nearbyItems) {
           // If possible, finish searching for paired items
           if (nearbyItems[key] && nearbyItems[key].texture === item.texture) return;
@@ -356,6 +340,15 @@ function changeField(field, score, item) {
     field = new Field(score);
     
   }
+
+
+  function removeHiddenItems(field) {
+    for (let column = 0; column < field.size; column++) {
+      for (let row = field.size - 1; row >= 0; row--) {
+        if (field.children[column].children[row].hidden) {
+          field.children[column].removeChild(field.children[column].children[row]);
+        }
+      }
+    }
+  }
 }
-
-
