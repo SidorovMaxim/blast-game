@@ -32,6 +32,16 @@ let ratio = +((windowSizes.window_aspect_ratio > 1) ?
 let level = 0;
 
 
+// Func for creating game scene background
+export function sceneBackground(bgImg) {
+  const background = new Sprite(loader.resources[bgImg].texture);
+
+  background.scale.set(ratio);
+  background.x = 0;
+  background.y = 0;
+
+  return background;
+}
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 

@@ -53,14 +53,8 @@ function newGame() {
   const gameScene = new Container();
   app.stage.addChild(gameScene);
 
-
   // Create game scene background
-  const bg = new Sprite(loader.resources[bgImg].texture);
-  bg.scale.set(ratio);
-  bg.x = 0;
-  bg.y = 0;
-  gameScene.addChild(bg);
-
+  gameScene.addChild(sceneBackground(bgImg));
 
   // Create headers text
   const headers = [
