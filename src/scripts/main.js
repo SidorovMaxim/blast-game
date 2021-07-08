@@ -21,22 +21,25 @@ let Application     = PIXI.Application,
     Text            = PIXI.Text,
     TextStyle       = PIXI.TextStyle;
 
+const window_width = window.innerWidth;
+const window_height = window.innerHeight;
+const window_aspect_ratio = window_width / window_height;
 
-const HEIGHT_DEFAULT = 1357;
-const ASPECT_RATIO = 1.41;
-
-let windowHeight = window.innerHeight;
-let ratio = +(windowHeight / HEIGHT_DEFAULT).toFixed(3);
-
+let ratio = +((window_aspect_ratio > 1) ?
+              (window_width / config.screen.width_default) :
+              (window_height / config.screen.height_default)).toFixed(3);
 
 let app = new Application({
-  width: windowHeight * ASPECT_RATIO,
-  height: windowHeight,
+  width:  (window_aspect_ratio > 1) ? (window_width) :
+          (window_height * config.screen.aspectRatio),
+  height: (window_aspect_ratio <= 1) ? (window_height) :
+          (window_width / config.screen.aspectRatio),
   backgroundColor: '0xb3b3b3',
   antialias: true
 });
 
 document.body.appendChild(app.view);
+
 
 loader
   .add(bgImg)
