@@ -103,6 +103,30 @@ export function Result() {
   return {result, resultContainer};
 }
 
+
+// Func for creating moves component
+export function Moves() {
+
+  // Create moves container
+  const movesContainer = new Container();
+  movesContainer.x = config.moves.position_default.x * ratio;
+  movesContainer.y = config.moves.position_default.y * ratio;
+
+  // Create moves text style
+  const movesStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 115 * ratio,
+    fill: 'white'
+  });
+
+  // Create moves text
+  const moves = new Text(config.levels[level].moves, movesStyle);
+  moves.anchor.set(.5);
+  movesContainer.addChild(moves);
+
+  return {moves, movesContainer};
+}
+
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 

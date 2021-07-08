@@ -63,25 +63,10 @@ function newGame() {
   const { result, resultContainer } = Result();
   gameScene.addChild(resultContainer);
 
+  // Create moves component
+  const { moves, movesContainer } = Moves();
   gameScene.addChild(movesContainer);
 
-  // Create moves text style
-  const movesStyle = new TextStyle({
-    fontFamily: 'Marvin',
-    fontSize: 115 * ratio,
-    fill: 'white'
-  });
-
-  // Create moves text
-  const moves = new Text(config.levels[level].moves, movesStyle);
-  moves.anchor.set(.5);
-  movesContainer.addChild(moves);
-
-
-  // Create score container
-  const scoreContainer = new Container();
-  scoreContainer.x = config.score.position_default.x * ratio;
-  scoreContainer.y = config.score.position_default.y * ratio;
   gameScene.addChild(scoreContainer);
 
   // Create score text style
