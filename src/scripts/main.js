@@ -69,15 +69,15 @@ function setup() {
   const headers = [
     {
       text: 'ПРОГРЕСС',
-      position: {x: 786, y: 5}
+      position: {x: 875, y: 25}
     },
     {
       text: 'ХОДЫ:',
-      position: {x: 1430, y: 240}
+      position: {x: 1500, y: 260}
     },
     {
       text: 'ОЧКИ:',
-      position: {x: 1430, y: 650}
+      position: {x: 1500, y: 670}
     }
   ];
 
@@ -91,6 +91,7 @@ function setup() {
     const header = new Text(headers[i].text, headerStyle);
     header.x = headers[i].position.x * ratio;
     header.y = headers[i].position.y * ratio;
+    header.anchor.set(.5);
     gameScene.addChild(header);
   }
 
