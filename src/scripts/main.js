@@ -44,13 +44,10 @@ document.body.appendChild(app.view);
 loader
   .add(bgImg)
   .add(boxes)
-  .load(setup);
-
-
-let level = 0;
+  .load(newGame);
 
 // Start new game
-function setup() {
+function newGame() {
 
   // Create game scene
   const gameScene = new Container();
