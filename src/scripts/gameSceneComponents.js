@@ -127,6 +127,31 @@ export function Moves() {
   return {moves, movesContainer};
 }
 
+
+// Func for creating score component
+export function Score() {
+
+  // Create score container
+  const scoreContainer = new Container();
+  scoreContainer.x = config.score.position_default.x * ratio;
+  scoreContainer.y = config.score.position_default.y * ratio;
+
+  // Create score text style
+  const scoreStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 80 * ratio,
+    fill: 'white'
+  });
+
+  // Create score text
+  const score = new Text('0', scoreStyle);
+  score.target = config.levels[level].score;
+  score.anchor.set(.5);
+  scoreContainer.addChild(score);
+
+  return {score, scoreContainer};
+}
+
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 

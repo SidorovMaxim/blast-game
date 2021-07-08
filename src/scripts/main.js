@@ -67,21 +67,13 @@ function newGame() {
   const { moves, movesContainer } = Moves();
   gameScene.addChild(movesContainer);
 
+  // Create score component
+  const { score, scoreContainer } = Score();
   gameScene.addChild(scoreContainer);
 
-  // Create score text style
-  const scoreStyle = new TextStyle({
-    fontFamily: 'Marvin',
-    fontSize: 80 * ratio,
-    fill: 'white'
-  });
-
-  // Create score text
-  const score = new Text('0', scoreStyle);
-  score.target = config.levels[level].score;
-  score.anchor.set(.5);
-  scoreContainer.addChild(score);
-
+  // Create progress component
+  const { progress, progressContainer } = Progress();
+  gameScene.addChild(progressContainer);
 
   // Create game field
   const field = new Field(score, moves, result);
