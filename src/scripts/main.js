@@ -59,30 +59,10 @@ function newGame() {
   // Create scene headers
   gameScene.addChild(...sceneHeaders());
 
-
-  // Create result container
-  const resultContainer = new Container();
-  resultContainer.x = config.result.position_default.x * ratio;
-  resultContainer.y = config.result.position_default.y * ratio;
+  // Create result component
+  const { result, resultContainer } = Result();
   gameScene.addChild(resultContainer);
 
-  // Create result text style
-  const resultStyle = new TextStyle({
-    fontFamily: 'Marvin',
-    fontSize: 115 * ratio,
-    fill: 'white'
-  });
-
-  // Create result text
-  const result = new Text('', resultStyle);
-  result.anchor.set(.5);
-  resultContainer.addChild(result);
-
-
-  // Create moves container
-  const movesContainer = new Container();
-  movesContainer.x = config.moves.position_default.x * ratio;
-  movesContainer.y = config.moves.position_default.y * ratio;
   gameScene.addChild(movesContainer);
 
   // Create moves text style

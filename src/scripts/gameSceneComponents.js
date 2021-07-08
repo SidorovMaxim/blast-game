@@ -79,6 +79,30 @@ export function sceneHeaders() {
   return headers;
 }
 
+
+// Func for creating result component
+export function Result() {
+
+  // Create result component
+  const resultContainer = new Container();
+  resultContainer.x = config.result.position_default.x * ratio;
+  resultContainer.y = config.result.position_default.y * ratio;
+
+  // Create result text style
+  const resultStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 115 * ratio,
+    fill: 'white'
+  });
+
+  // Create result text
+  const result = new Text('', resultStyle);
+  result.anchor.set(.5);
+  resultContainer.addChild(result);
+
+  return {result, resultContainer};
+}
+
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 
