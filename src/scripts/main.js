@@ -56,35 +56,8 @@ function newGame() {
   // Create game scene background
   gameScene.addChild(sceneBackground(bgImg));
 
-  // Create headers text
-  const headers = [
-    {
-      text: 'ПРОГРЕСС',
-      position: {x: 875, y: 25}
-    },
-    {
-      text: 'ХОДЫ:',
-      position: {x: 1500, y: 260}
-    },
-    {
-      text: 'ОЧКИ:',
-      position: {x: 1500, y: 670}
-    }
-  ];
-
-  const headerStyle = new TextStyle({
-    fontFamily: 'Marvin',
-    fontSize: 40 * ratio,
-    fill: 'white'
-  });
-
-  for (let i = 0; i < headers.length; i++) {
-    const header = new Text(headers[i].text, headerStyle);
-    header.x = headers[i].position.x * ratio;
-    header.y = headers[i].position.y * ratio;
-    header.anchor.set(.5);
-    gameScene.addChild(header);
-  }
+  // Create scene headers
+  gameScene.addChild(...sceneHeaders());
 
 
   // Create result container

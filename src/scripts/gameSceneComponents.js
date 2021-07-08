@@ -42,6 +42,43 @@ export function sceneBackground(bgImg) {
 
   return background;
 }
+
+
+// Func for creating game scene headers
+export function sceneHeaders() {
+  const headersText = [
+    {
+      text: 'ПРОГРЕСС',
+      position: {x: 875, y: 25}
+    },
+    {
+      text: 'ХОДЫ:',
+      position: {x: 1500, y: 260}
+    },
+    {
+      text: 'ОЧКИ:',
+      position: {x: 1500, y: 670}
+    }
+  ];
+
+  const headerStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 40 * ratio,
+    fill: 'white'
+  });
+
+  let headers = [];
+  for (let i = 0; i < headersText.length; i++) {
+    const header = new Text(headersText[i].text, headerStyle);
+    header.x = headersText[i].position.x * ratio;
+    header.y = headersText[i].position.y * ratio;
+    header.anchor.set(.5);
+    headers.push(header);
+  }
+
+  return headers;
+}
+
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 
