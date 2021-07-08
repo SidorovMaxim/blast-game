@@ -152,6 +152,22 @@ export function Score() {
   return {score, scoreContainer};
 }
 
+
+// Func for creating progress component
+export function Progress() {
+
+  // Create progress container
+  const progressContainer = new Container();
+  progressContainer.x = config.progress.position_default.x * ratio;
+  progressContainer.y = config.progress.position_default.y * ratio;
+
+  // Create progress graphics
+  const progress = {};
+
+  return {progress, progressContainer};
+}
+
+
 // Func for creating new game field item
 export function Item(column, row, field, score, moves, result) {
 
