@@ -99,14 +99,13 @@ export function changeField(field, score, progress, moves, result, item) {
       animate({
         duration: 500,
         action: 'change',
-        draw(animProgress, progress) {
-          progress.value = +score.text / score.target * 100 * animProgress;
+        draw(animProgress, progress, prevValue) {
+          progress.value = +(prevValue + (+score.text / score.target * 100 - prevValue) * animProgress).toFixed(1);
           if (progress.value > 100) progress.value = 100;
           progress.change(progress);
         }
-      }, progress);
+      }, progress, progress.value);
     })();
-
   }
 
 

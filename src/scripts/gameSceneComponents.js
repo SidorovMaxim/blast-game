@@ -176,11 +176,11 @@ export function Progress() {
 
     // Create progress canvas
     function progressCanvas(progress) {
-      progress.value = Math.round(636 * progress.value / 100);
+      const canvasValue = Math.round(634 * progress.value / 100);
 
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext("2d");
-      canvas.width  = 44 + progress.value;
+      canvas.width  = 44 + canvasValue;
       canvas.height = 44;
 
       const gradient = ctx.createLinearGradient(0, 44, 0, 0);
@@ -192,11 +192,11 @@ export function Progress() {
 
       ctx.fillStyle = gradient;
       ctx.beginPath();
-      ctx.arc(22, 22, 22, (Math.PI/180)*90, (Math.PI/180)*270);
+      ctx.arc(22, 22, 22, (Math.PI/180) * 90, (Math.PI/180) * 270);
       ctx.fill();
-      ctx.fillRect(22, 0, progress.value, 44);
+      ctx.fillRect(22, 0, canvasValue, 44);
       ctx.beginPath();
-      ctx.arc(22+progress.value, 22, 22, (Math.PI/180)*270, (Math.PI/180)*90);
+      ctx.arc(22 + canvasValue, 22, 22, (Math.PI/180) * 270, (Math.PI/180) * 90);
       ctx.fill();
 
       return canvas;
@@ -209,6 +209,7 @@ export function Progress() {
     progress = new Sprite(progressTexture);
     progress.scale.set(ratio);
     progress.change = Progress.change;
+    progress.value = progress.value ? progress.value : 0;
     progressContainer.addChild(progress);
 
     return progress;

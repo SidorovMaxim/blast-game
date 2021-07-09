@@ -4,27 +4,28 @@
 }
 
 html {
-	height: 100%;
-	font-family: 'Marvin';
+  height: 100%;
+  font-family: 'Marvin';
 }
 
 body {
-	height: inherit;
-	margin: 0;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  height: inherit;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 canvas {
-	width: 141.5vh;
-	max-width: 100vw;
-	height: 100vh;
-	max-height: 70.7vw;
+  width: 141.5vh;
+  max-width: 100vw;
+  height: 100vh;
+  max-height: 70.7vw;
 }
 
 div.fonts-loader {
-	position: absolute;
-	font-family: 'Marvin';
-	color: transparent;
+  position: absolute;
+  z-index: -1;
+  font-family: 'Marvin';
+  color: transparent;
 }
