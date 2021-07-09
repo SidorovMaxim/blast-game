@@ -22,3 +22,9 @@ canvas {
 	height: 100vh;
 	max-height: 70.7vw;
 }
+
+div.fonts-loader {
+	position: absolute;
+	font-family: 'Marvin';
+	color: transparent;
+}
