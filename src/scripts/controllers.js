@@ -6,146 +6,150 @@ import { Item, Items, Navigation, level } from './gameSceneComponents.js';
 
 // Func for changing game field if player clicked on any item
 export function changeGameScene(field, score, progress, moves, result, item) {
-  let aloneItem = true;
-  let hiddenItems = 0;
+  let aloneItem = {value: true};
+  let hiddenItems = {value: 0};
 
-  // Hide clicked item and nerby items with same texture
-  hideItems(field, item, {isClickedItem: true});
+  // Hide clicked item and nearby items with same texture
+  hideItems(field, item, {isClickedItem: true}, aloneItem, hiddenItems);
 
   // Unlocked field and interrupt if only one item
-  if (aloneItem) {
+  if (aloneItem.value) {
     field.locked = false;
     return;
   }
 
   // Continue if item is not alone
-    // Reduce the remaining num of moves
-    moves.text--;
+  // Reduce the remaining num of moves
+  moves.text--;
 
-    // Change score based on num of hidden items
-    changeScore(score, hiddenItems);
+  // Change score based on num of hidden items
+  changeScore(score, hiddenItems);
 
-    // Change progress based on score
-    changeProgress(score, progress);
+  // Change progress based on score
+  changeProgress(score, progress);
 
-    // Create new items based on num of hidden items in each column
-    createItems(field, score, moves, result);
+  // Create new items based on num of hidden items in each column
+  createItems(field, score, progress, moves, result);
 
-    // Move items with empty space below in them column
-    moveItems(field);
+  // Move items with empty space below in them column
+  moveItems(field);
 
-    setTimeout(() => {
-      // Remove hidden items when animation is over
-      removeHiddenItems(field);
-    }, 200);
+  setTimeout(() => {
+    // Remove hidden items when animation is over
+    removeHiddenItems(field);
+  }, 200);
 
-    
-    setTimeout(() => {
-      // Сheck the end of the game
-      checkGameState(field, score, moves, result);
+  
+  setTimeout(() => {
+    // Сheck the end of the game
+    checkGameState(field, score, moves, result);
 
-      // If it's the end of the game stop the game loop
-      if (result.text) return;
+    // If it's the end of the game stop the game loop
+    if (result.text) return;
 
-      // Сheck the existence of paired items with same texture
-      checkPossibleProgress(field, score, progress, moves, result);
+    // Сheck the existence of paired items with same texture
+    checkPossibleProgress(field, score, progress, moves, result);
 
-      // Unlock field
-      field.locked = false;
-    }, 500);
+    // Unlock field
+    field.locked = false;
+  }, 500);
+}
 
 
-  function hideItems(field, item, isClickedItem) {
-    (function hideItemsRecursive(item, isClickedItem) {
-      if (!isClickedItem) hideWithAnimation(item);
+// Func for hide clicked item and nearby items with same texture
+function hideItems(field, item, isClickedItem, aloneItem, hiddenItems) {
+  (function hideItemsRecursive(item, isClickedItem) {
+    if (!isClickedItem) hideWithAnimation(item);
 
-      const nearbyItems = {
-        top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
-        right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
-        bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
-        left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
-      };
+    const nearbyItems = {
+      top: (item.row !== 0) ? field.children[item.column].children[item.row - 1] : null,
+      right: (item.column !== field.size - 1) ? field.children[item.column + 1].children[item.row] : null,
+      bottom: (item.row !== field.size - 1) ? field.children[item.column].children[item.row + 1] : null,
+      left: (item.column !== 0) ? field.children[item.column - 1].children[item.row] : null
+    };
 
-      for (let key in nearbyItems) {
-        if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
-          if (isClickedItem && !item.hidden) {
-            aloneItem = false;
-            hideWithAnimation(item);
-          } 
-
-          hideItemsRecursive(nearbyItems[key]);
+    for (let key in nearbyItems) {
+      if (nearbyItems[key] && !nearbyItems[key].hidden && nearbyItems[key].texture === item.texture) {
+        if (isClickedItem && !item.hidden) {
+          aloneItem.value = false;
+          hideWithAnimation(item);
         } 
-      }
-    })(item, isClickedItem);
 
-    function hideWithAnimation(item) {
-      item.hidden = true;
-      hiddenItems++;
-
-      animate({
-        duration: 200,
-        action: 'hide',
-        draw(animProgress, hidingItem) {
-          hidingItem.width = field.itemSize.width * (1 - animProgress);
-          hidingItem.height = field.itemSize.height * (1 - animProgress);
-        }
-      }, item);
+        hideItemsRecursive(nearbyItems[key]);
+      } 
     }
-  }
+  })(item, isClickedItem);
 
+  function hideWithAnimation(item) {
+    item.hidden = true;
+    hiddenItems.value++;
 
-  function createItems(field, score, moves, result) {
-    for (let column = 0; column < field.size; column++) {
-      let numOfNewItems = 0;
-
-      for (let row = 0; row < field.size; row++) {
-        if (field.children[column].children[row].hidden) {
-          numOfNewItems++;
-        }
+    animate({
+      duration: 200,
+      action: 'hide',
+      draw(animProgress, hidingItem) {
+        hidingItem.width = field.itemSize.width * (1 - animProgress);
+        hidingItem.height = field.itemSize.height * (1 - animProgress);
       }
+    }, item);
+  }
+}
 
-      for (let row = field.size; row < field.size + numOfNewItems; row++) {
-        const item = new Item(column, row, field, score, progress, moves, result);
-        field.children[column].addChild(item);
+
+// Func for creating new items based on num of hidden items
+function createItems(field, score, progress, moves, result) {
+  for (let column = 0; column < field.size; column++) {
+    let numOfNewItems = 0;
+
+    for (let row = 0; row < field.size; row++) {
+      if (field.children[column].children[row].hidden) {
+        numOfNewItems++;
       }
     }
+
+    for (let row = field.size; row < field.size + numOfNewItems; row++) {
+      const item = new Item(column, row, field, score, progress, moves, result);
+      field.children[column].addChild(item);
+    }
   }
+}
 
 
-  function moveItems(field) {
-    for (let column = 0; column < field.size; column++) {
-      let numOfMoves = 0;
+// Func for moving items
+function moveItems(field) {
+  for (let column = 0; column < field.size; column++) {
+    let numOfMoves = 0;
 
-      for (let row = 0; row < field.children[column].children.length; row++) {
-        const item = field.children[column].children[row];
+    for (let row = 0; row < field.children[column].children.length; row++) {
+      const item = field.children[column].children[row];
 
-        if (item.hidden) {
-          numOfMoves++;
-        } else {
-          if (numOfMoves) {
-            // Set new row value of moving item
-            item.row -= numOfMoves;
+      if (item.hidden) {
+        numOfMoves++;
+      } else {
+        if (numOfMoves) {
+          // Set new row value of moving item
+          item.row -= numOfMoves;
 
-            animate({
-              duration: 500,
-              action: 'move',
-              draw(animProgress, movingItem, initY, numOfMoves) {
-                movingItem.y = initY + field.itemSize.height * numOfMoves * animProgress;
-              }
-            }, item, item.y, numOfMoves);
-          }
+          animate({
+            duration: 500,
+            action: 'move',
+            draw(animProgress, movingItem, initY, numOfMoves) {
+              movingItem.y = initY + field.itemSize.height * numOfMoves * animProgress;
+            }
+          }, item, item.y, numOfMoves);
         }
       }
     }
   }
+}
 
 
-  function removeHiddenItems(field) {
-    for (let column = 0; column < field.size; column++) {
-      for (let row = field.size - 1; row >= 0; row--) {
-        if (field.children[column].children[row].hidden) {
-          field.children[column].removeChild(field.children[column].children[row]);
-        }
+// Func for removing hidden items
+function removeHiddenItems(field) {
+  for (let column = 0; column < field.size; column++) {
+    for (let row = field.size - 1; row >= 0; row--) {
+      if (field.children[column].children[row].hidden) {
+        field.children[column].removeChild(field.children[column].children[row]);
       }
     }
   }
@@ -194,13 +198,13 @@ function shuffleItems(field, score, progress, moves, result) {
 }
 
 
-// Func for score calculation
+// Func for changing score
 function changeScore(score, hiddenItems) {
-  score.text = +score.text + Math.pow(hiddenItems, 2);
+  score.text = +score.text + Math.pow(hiddenItems.value, 2);
 }
 
 
-// Func for progress calculation
+// Func for changing progress
 function changeProgress(score, progress) {
   (function changeProgressWithAnimation() {
     animate({
