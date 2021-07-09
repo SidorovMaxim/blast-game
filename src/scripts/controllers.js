@@ -173,24 +173,34 @@ export function checkPossibleProgress(field, score, moves, result) {
   }
 
   // If no pair of items
-  (function shuffleItems(field) {
-    // Remove all current items
-    field.removeChildren();
-
-    // Add new items
-    field.addChild(...Items(field, score, moves, result));
-
-    // Recursive check
-    checkPossibleProgress(field, score, moves, result);
-  })(field);
+  shuffleItems(field, score, progress, moves, result);
 }
 
 
+// Func for shuffling items
+function shuffleItems(field, score, progress, moves, result) {
+  
+  if (!field.numOfShuffles) return levelLost(field, result, 'Нет перемешиваний');
+  field.numOfShuffles--;
+  
+  // Remove all current items
+  field.removeChildren();
+
+  // Add new items
+  field.addChild(...Items(field, score, progress, moves, result));
+
+  // Recursive check
+  checkPossibleProgress(field, score, progress, moves, result);
+}
+
+
+// Func for score calculation
 function changeScore(score, hiddenItems) {
   score.text = +score.text + Math.pow(hiddenItems, 2);
 }
 
 
+// Func for progress calculation
 function changeProgress(score, progress) {
   (function changeProgressWithAnimation() {
     animate({
@@ -206,29 +216,43 @@ function changeProgress(score, progress) {
 }
 
 
+// Func for check game end
 function checkGameState(field, score, moves, result) {
   if (+score.text >= score.target) {
-    field.removeChildren();
-    result.text = 'Уровень пройден!';
-
-    const interval = setInterval(() => {
-      if (+moves.text) {
-        score.text = +score.text + 500;
-        moves.text--;
-      } else {
-        clearInterval(interval);
-        Navigation.toggleVisibility(true);
-      }
-    }, 100);
+    levelWon(field, score, moves, result);
 
   } else if (!+moves.text) {
-    field.removeChildren();
-    result.text = 'Попробуй ещё раз';
-    Navigation.toggleVisibility(false);
+    levelLost(field, result, 'Попробуй ещё раз');
   }
 }
 
 
+// Level passed
+function levelWon(field, score, moves, result) {
+  field.removeChildren();
+  result.text = 'Уровень пройден!';
+
+  const interval = setInterval(() => {
+    if (+moves.text) {
+      score.text = +score.text + 500;
+      moves.text--;
+    } else {
+      clearInterval(interval);
+      Navigation.toggleVisibility(true);
+    }
+  }, 100);
+}
+
+
+// Level failed
+function levelLost(field, result, phrase) {
+  field.removeChildren();
+  result.text = phrase;
+  Navigation.toggleVisibility(false);
+}
+
+
+// Go to the next level
 export function nextLevel(result) {
   if (level.value < config.levels.length - 1) {
     level.value++;
