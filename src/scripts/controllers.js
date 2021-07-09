@@ -89,26 +89,6 @@ export function changeField(field, score, progress, moves, result, item) {
   }
 
 
-  function changeScore(score, hiddenItems) {
-    score.text = +score.text + Math.pow(hiddenItems, 2);
-  }
-
-
-  function changeProgress(score, progress) {
-    (function changeProgressWithAnimation() {
-      animate({
-        duration: 500,
-        action: 'change',
-        draw(animProgress, progress, prevValue) {
-          progress.value = +(prevValue + (+score.text / score.target * 100 - prevValue) * animProgress).toFixed(1);
-          if (progress.value > 100) progress.value = 100;
-          progress.change(progress);
-        }
-      }, progress, progress.value);
-    })();
-  }
-
-
   function createItems(field, score, moves, result) {
     for (let column = 0; column < field.size; column++) {
       let numOfNewItems = 0;
@@ -164,27 +144,6 @@ export function changeField(field, score, progress, moves, result, item) {
       }
     }
   }
-
-
-  function checkGameState(score, moves, result) {
-    if (+score.text >= score.target) {
-      field.removeChildren();
-      result.text = 'You won!';
-
-      const interval = setInterval(() => {
-        if (+moves.text) {
-          score.text = +score.text + 500;
-          moves.text--;
-        } else {
-          clearInterval(interval);
-        }
-      }, 200);
-
-    } else if (!+moves.text) {
-      field.removeChildren();
-      result.text = 'You lose';
-    }
-  }
 }
 
 
@@ -219,4 +178,45 @@ export function checkPossibleProgress(field, score, moves, result) {
     // Recursive check
     checkPossibleProgress(field, score, moves, result);
   })(field);
+
+function changeScore(score, hiddenItems) {
+  score.text = +score.text + Math.pow(hiddenItems, 2);
+}
+
+
+function changeProgress(score, progress) {
+  (function changeProgressWithAnimation() {
+    animate({
+      duration: 500,
+      action: 'change',
+      draw(animProgress, progress, prevValue) {
+        progress.value = +(prevValue + (+score.text / score.target * 100 - prevValue) * animProgress).toFixed(1);
+        if (progress.value > 100) progress.value = 100;
+        progress.change(progress);
+      }
+    }, progress, progress.value);
+  })();
+}
+
+
+function checkGameState(field, score, moves, result) {
+  if (+score.text >= score.target) {
+    field.removeChildren();
+    result.text = 'Уровень пройден!';
+
+    const interval = setInterval(() => {
+      if (+moves.text) {
+        score.text = +score.text + 500;
+        moves.text--;
+      } else {
+        clearInterval(interval);
+        changeLevel(result);
+      }
+    }, 100);
+
+  } else if (!+moves.text) {
+    field.removeChildren();
+    result.text = 'Попробуй ещё раз';
+  }
+}
 }
