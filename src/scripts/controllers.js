@@ -3,7 +3,7 @@ import { Item } from './gameSceneComponents.js';
 
 
 // Func for changing game field if player clicked on any item
-export function changeField(field, score, moves, result, item) {
+export function changeField(field, score, progress, moves, result, item) {
   let aloneItem = true;
   let hiddenItems = 0;
 
@@ -21,7 +21,10 @@ export function changeField(field, score, moves, result, item) {
     moves.text--;
 
     // Calculate score based on num of hidden items
-    calculateScore(score, hiddenItems);
+    changeScore(score, hiddenItems);
+
+    // Calculate score based on num of hidden items
+    changeProgress(score, progress);
 
     // Create new items based on num of hidden items in each column
     createItems(field, score, moves, result);
@@ -77,17 +80,33 @@ export function changeField(field, score, moves, result, item) {
       animate({
         duration: 200,
         action: 'hide',
-        draw(progress, hidingItem) {
-          hidingItem.width = field.itemSize.width * (1 - progress);
-          hidingItem.height = field.itemSize.height * (1 - progress);
+        draw(animProgress, hidingItem) {
+          hidingItem.width = field.itemSize.width * (1 - animProgress);
+          hidingItem.height = field.itemSize.height * (1 - animProgress);
         }
       }, item);
     }
   }
 
 
-  function calculateScore(score, hiddenItems) {
+  function changeScore(score, hiddenItems) {
     score.text = +score.text + Math.pow(hiddenItems, 2);
+  }
+
+
+  function changeProgress(score, progress) {
+    (function changeProgressWithAnimation() {
+      animate({
+        duration: 500,
+        action: 'change',
+        draw(animProgress, progress) {
+          progress.value = +score.text / score.target * 100 * animProgress;
+          if (progress.value > 100) progress.value = 100;
+          progress.change(progress);
+        }
+      }, progress);
+    })();
+
   }
 
 
@@ -102,7 +121,7 @@ export function changeField(field, score, moves, result, item) {
       }
 
       for (let row = field.size; row < field.size + numOfNewItems; row++) {
-        const item = new Item(column, row, field, score, moves, result);
+        const item = new Item(column, row, field, score, progress, moves, result);
         field.children[column].addChild(item);
       }
     }
@@ -126,8 +145,8 @@ export function changeField(field, score, moves, result, item) {
             animate({
               duration: 500,
               action: 'move',
-              draw(progress, movingItem, initY, numOfMoves) {
-                movingItem.y = initY + field.itemSize.height * numOfMoves * progress;
+              draw(animProgress, movingItem, initY, numOfMoves) {
+                movingItem.y = initY + field.itemSize.height * numOfMoves * animProgress;
               }
             }, item, item.y, numOfMoves);
           }
@@ -155,12 +174,12 @@ export function changeField(field, score, moves, result, item) {
 
       const interval = setInterval(() => {
         if (+moves.text) {
-          score.text = +score.text + 1000;
+          score.text = +score.text + 500;
           moves.text--;
         } else {
           clearInterval(interval);
         }
-      }, 500);
+      }, 200);
 
     } else if (!+moves.text) {
       field.removeChildren();

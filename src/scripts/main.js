@@ -7,11 +7,12 @@ import { boxes, windowSizes,
          Result, Moves, Score, Progress, Field }  from './gameSceneComponents.js';
 
 
+// Init PIXI aliases
 let Application     = PIXI.Application,
     Container       = PIXI.Container,
     loader          = PIXI.Loader.shared;
 
-
+// Init PIXI app
 let app = new Application({
   width:  (windowSizes.window_aspect_ratio > 1) ? (windowSizes.window_width) :
           (windowSizes.window_height * config.screen.aspectRatio),
@@ -22,7 +23,7 @@ let app = new Application({
 });
 document.body.appendChild(app.view);
 
-
+// Init PIXI loader
 loader
   .add(bgImg)
   .add(boxes)
@@ -58,6 +59,6 @@ function newGame() {
   gameScene.addChild(progressContainer);
 
   // Create game field
-  const field = new Field(score, moves, result);
+  const field = new Field(score, progress, moves, result);
   gameScene.addChild(field);
 }

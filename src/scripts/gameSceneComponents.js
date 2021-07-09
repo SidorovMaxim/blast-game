@@ -168,15 +168,58 @@ export function Progress() {
   progressContainer.x = config.progress.position_default.x * ratio;
   progressContainer.y = config.progress.position_default.y * ratio;
 
-  // Create progress graphics
-  const progress = {};
+  // Init progress
+  const progress = {value: 0};
 
-  return {progress, progressContainer};
+  // Change progress
+  Progress.change = function(progress) {
+
+    // Create progress canvas
+    function progressCanvas(progress) {
+      progress.value = Math.round(636 * progress.value / 100);
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext("2d");
+      canvas.width  = 44 + progress.value;
+      canvas.height = 44;
+
+      const gradient = ctx.createLinearGradient(0, 44, 0, 0);
+      gradient.addColorStop(0,    'rgb(96,255,0)');
+      gradient.addColorStop(0.32, 'rgb(29,155,0)');
+      gradient.addColorStop(0.77, 'rgb(162,255,0)');
+      gradient.addColorStop(0.91, 'rgb(199,255,102)');
+      gradient.addColorStop(1,    'rgb(236,255,204)');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(22, 22, 22, (Math.PI/180)*90, (Math.PI/180)*270);
+      ctx.fill();
+      ctx.fillRect(22, 0, progress.value, 44);
+      ctx.beginPath();
+      ctx.arc(22+progress.value, 22, 22, (Math.PI/180)*270, (Math.PI/180)*90);
+      ctx.fill();
+
+      return canvas;
+    }
+
+    // Create progress texture
+    const progressTexture = new Texture.from(progressCanvas(progress));
+
+    // Create progress
+    progress = new Sprite(progressTexture);
+    progress.scale.set(ratio);
+    progress.change = Progress.change;
+    progressContainer.addChild(progress);
+
+    return progress;
+  }
+
+  return {progress: Progress.change(progress), progressContainer};
 }
 
 
 // Func for creating new game field item
-export function Item(column, row, field, score, moves, result) {
+export function Item(column, row, field, score, progress, moves, result) {
 
   // Get random item
   const itemColor = boxes[Math.floor(Math.random() * field.numOfColors)];
@@ -194,21 +237,21 @@ export function Item(column, row, field, score, moves, result) {
 
   item.interactive = true;
   item.buttonMOde = true;
-  item.on('pointerdown', handleClick.bind(null, field, score, moves, result));
+  item.on('pointerdown', handleClick.bind(null, field, score, progress, moves, result));
 
   return item;
 }
 
 
 // Func for creating new game field items
-export function Items(field, score, moves, result) {
+export function Items(field, score, progress, moves, result) {
   let items = [];
 
   for (let column = 0; column < field.size; column++) {
     const fieldColumn = new Container();
 
     for (let row = 0; row < field.size; row++) {
-      const item = new Item(column, row, field, score, moves, result);
+      const item = new Item(column, row, field, score, progress, moves, result);
       fieldColumn.addChild(item);
     }
 
@@ -220,7 +263,7 @@ export function Items(field, score, moves, result) {
 
 
 // Func for creating new game field
-export function Field(score, moves, result) {
+export function Field(score, progress, moves, result) {
   const field = new Container();
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
@@ -236,10 +279,10 @@ export function Field(score, moves, result) {
   }
 
   // Add new items on game field
-  field.addChild(...Items(field, score, moves, result));
+  field.addChild(...Items(field, score, progress, moves, result));
 
   // Сheck the existence of paired items with same texture
-  checkPossibleProgress(field, score, moves, result);
+  checkPossibleProgress(field, score, progress, moves, result);
 
   return field;
 }
