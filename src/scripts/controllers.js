@@ -5,7 +5,7 @@ import { Item, level } from './gameSceneComponents.js';
 
 
 // Func for changing game field if player clicked on any item
-export function changeField(field, score, progress, moves, result, item) {
+export function changeGameScene(field, score, progress, moves, result, item) {
   let aloneItem = true;
   let hiddenItems = 0;
 
@@ -22,10 +22,10 @@ export function changeField(field, score, progress, moves, result, item) {
     // Reduce the remaining num of moves
     moves.text--;
 
-    // Calculate score based on num of hidden items
+    // Change score based on num of hidden items
     changeScore(score, hiddenItems);
 
-    // Calculate score based on num of hidden items
+    // Change progress based on score
     changeProgress(score, progress);
 
     // Create new items based on num of hidden items in each column
@@ -39,15 +39,18 @@ export function changeField(field, score, progress, moves, result, item) {
       removeHiddenItems(field);
     }, 200);
 
-    // Unlock field
+    
     setTimeout(() => {
+      // Сheck the end of the game
       checkGameState(field, score, moves, result);
 
+      // If it's the end of the game stop the game loop
       if (result.text) return;
 
       // Сheck the existence of paired items with same texture
       checkPossibleProgress(field, score, moves, result);
 
+      // Unlock field
       field.locked = false;
     }, 500);
 

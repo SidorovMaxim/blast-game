@@ -43,7 +43,6 @@ function GameScene() {
   // Create game scene container
   const gameScene = new Container();
 
-
   // Create game scene background
   gameScene.addChild(sceneBackground(bgImg));
 

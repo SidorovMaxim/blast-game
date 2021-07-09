@@ -1,4 +1,4 @@
-import { changeField } from './controllers.js';
+import { changeGameScene } from './controllers.js';
 
 
 export function handleClick(field, score, progress, moves, result, event) {
@@ -8,6 +8,6 @@ export function handleClick(field, score, progress, moves, result, event) {
     field.locked = true;
 
     // Change field based on clicked item
-    changeField(field, score, progress, moves, result, event.target);
+    changeGameScene(field, score, progress, moves, result, event.target);
   }
 }
