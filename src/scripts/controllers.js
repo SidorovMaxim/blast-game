@@ -1,7 +1,7 @@
 import animate from './animate.js';
 import { createNewLevel } from './main.js';
 import config from '../configs/config.json';
-import { Item, Navigation, level } from './gameSceneComponents.js';
+import { Item, Items, Navigation, level } from './gameSceneComponents.js';
 
 
 // Func for changing game field if player clicked on any item
@@ -48,7 +48,7 @@ export function changeGameScene(field, score, progress, moves, result, item) {
       if (result.text) return;
 
       // Сheck the existence of paired items with same texture
-      checkPossibleProgress(field, score, moves, result);
+      checkPossibleProgress(field, score, progress, moves, result);
 
       // Unlock field
       field.locked = false;
@@ -153,7 +153,7 @@ export function changeGameScene(field, score, progress, moves, result, item) {
 
 
 // Func for checking the existence of paired items with same texture
-export function checkPossibleProgress(field, score, moves, result) {
+export function checkPossibleProgress(field, score, progress, moves, result) {
   for (let column = 0; column < field.size; column++) {
     for (let row = 0; row < field.size; row++) {
       const item = field.children[column].children[row];
@@ -262,6 +262,8 @@ export function nextLevel(result) {
   }
 }
 
+
+// Replay current level
 export function replayLevel() {
   createNewLevel();
 }

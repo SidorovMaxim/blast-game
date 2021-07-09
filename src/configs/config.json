@@ -16,15 +16,17 @@
   "field": {
     "position_default": {"x": 100, "y": 267},
     "size_default": 9,
-    "size": 9,
-    "numOfColors": 5
+    "numOfShuffles": 2
   },
   "item": {
     "width_default": 93,
     "height_default": 104
   },
   "result": {
-    "position_default": {"x": 520, "y": 737}
+    "position_default": {"x": 520, "y": 600}
+  },
+  "navigation": {
+    "position_default": {"x": 520, "y": 700}
   },
   "levels": [
     {
@@ -36,34 +38,34 @@
       }
     },
     {
-      "score": 2500,
+      "score": 2000,
       "moves": 30,
       "field": {
-        "size": 9,
+        "size": 10,
         "numOfColors": 4
       }
     },
     {
-      "score": 2000,
+      "score": 1500,
+      "moves": 40,
+      "field": {
+        "size": 11,
+        "numOfColors": 5
+      }
+    },
+    {
+      "score": 1500,
+      "moves": 40,
+      "field": {
+        "size": 10,
+        "numOfColors": 5
+      }
+    },
+    {
+      "score": 1500,
       "moves": 40,
       "field": {
         "size": 9,
-        "numOfColors": 5
-      }
-    },
-    {
-      "score": 2000,
-      "moves": 50,
-      "field": {
-        "size": 8,
-        "numOfColors": 5
-      }
-    },
-    {
-      "score": 2000,
-      "moves": 40,
-      "field": {
-        "size": 6,
         "numOfColors": 5
       }
     }

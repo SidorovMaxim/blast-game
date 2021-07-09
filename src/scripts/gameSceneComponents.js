@@ -248,6 +248,7 @@ export function Field(score, progress, moves, result) {
   field.size_default = config.field.size_default;
 
   field.numOfColors = config.levels[level.value].field.numOfColors;
+  field.numOfShuffles = config.field.numOfShuffles;
   field.sizeRatio = field.size_default / field.size;
   field.itemSize = {
     width: config.item.width_default * ratio * field.sizeRatio,
