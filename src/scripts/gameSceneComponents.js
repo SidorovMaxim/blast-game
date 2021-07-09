@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import config from '../configs/config.json';
-import { handleClick } from './handlers.js';
 import { checkPossibleProgress } from './controllers.js';
+import { handleClick, handleReplayLevel, handleNextLevel } from './handlers.js';
 
 import red      from '../assets/boxes/red.png';
 import blue     from '../assets/boxes/blue.png';

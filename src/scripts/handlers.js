@@ -11,3 +11,11 @@ export function handleClick(field, score, progress, moves, result, event) {
     changeGameScene(field, score, progress, moves, result, event.target);
   }
 }
+
+export function handleNextLevel() {
+  nextLevel();
+}
+
+export function handleReplayLevel() {
+  replayLevel();
+}
