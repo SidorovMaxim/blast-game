@@ -1,5 +1,7 @@
 import animate from './animate.js';
-import { Item } from './gameSceneComponents.js';
+import { createNewLevel } from './main.js';
+import config from '../configs/config.json';
+import { Item, level } from './gameSceneComponents.js';
 
 
 // Func for changing game field if player clicked on any item
@@ -39,7 +41,7 @@ export function changeField(field, score, progress, moves, result, item) {
 
     // Unlock field
     setTimeout(() => {
-      checkGameState(score, moves, result);
+      checkGameState(field, score, moves, result);
 
       if (result.text) return;
 
@@ -178,6 +180,8 @@ export function checkPossibleProgress(field, score, moves, result) {
     // Recursive check
     checkPossibleProgress(field, score, moves, result);
   })(field);
+}
+
 
 function changeScore(score, hiddenItems) {
   score.text = +score.text + Math.pow(hiddenItems, 2);
@@ -219,4 +223,13 @@ function checkGameState(field, score, moves, result) {
     result.text = 'Попробуй ещё раз';
   }
 }
+
+
+function changeLevel(result) {
+  if (level.value < config.levels.length - 1) {
+    level.value++;
+    createNewLevel();
+  } else {
+    result.text = 'Ты прошел игру!'
+  }
 }

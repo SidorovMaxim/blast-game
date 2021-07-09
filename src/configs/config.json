@@ -24,7 +24,7 @@
     "height_default": 104
   },
   "result": {
-    "position_default": {"x": 530, "y": 737}
+    "position_default": {"x": 520, "y": 737}
   },
   "levels": [
     {
@@ -33,6 +33,22 @@
       "field": {
         "size": 9,
         "numOfColors": 3
+      }
+    },
+    {
+      "score": 3000,
+      "moves": 30,
+      "field": {
+        "size": 9,
+        "numOfColors": 4
+      }
+    },
+    {
+      "score": 3000,
+      "moves": 40,
+      "field": {
+        "size": 9,
+        "numOfColors": 5
       }
     }
   ]

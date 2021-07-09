@@ -8,12 +8,12 @@ import { boxes, windowSizes,
 
 
 // Init PIXI aliases
-let Application     = PIXI.Application,
+const Application     = PIXI.Application,
     Container       = PIXI.Container,
     loader          = PIXI.Loader.shared;
 
 // Init PIXI app
-let app = new Application({
+export const app = new Application({
   width:  (windowSizes.window_aspect_ratio > 1) ? (windowSizes.window_width) :
           (windowSizes.window_height * config.screen.aspectRatio),
   height: (windowSizes.window_aspect_ratio <= 1) ? (windowSizes.window_height) :
@@ -27,14 +27,22 @@ document.body.appendChild(app.view);
 loader
   .add(bgImg)
   .add(boxes)
-  .load(newGame);
+  .load(createNewLevel);
 
-// Start new game
-function newGame() {
 
-  // Create game scene
+// Create new game level
+export function createNewLevel() {
+  app.stage.removeChildren();
+  app.stage.addChild(new GameScene());
+}
+
+
+// New game scene
+function GameScene() {
+
+  // Create game scene container
   const gameScene = new Container();
-  app.stage.addChild(gameScene);
+
 
   // Create game scene background
   gameScene.addChild(sceneBackground(bgImg));
@@ -43,22 +51,26 @@ function newGame() {
   gameScene.addChild(...sceneHeaders());
 
   // Create result component
-  const { result, resultContainer } = Result();
+  const { result, resultContainer } = new Result();
   gameScene.addChild(resultContainer);
 
   // Create moves component
-  const { moves, movesContainer } = Moves();
+  const { moves, movesContainer } = new Moves();
   gameScene.addChild(movesContainer);
 
   // Create score component
-  const { score, scoreContainer } = Score();
+  const { score, scoreContainer } = new Score();
   gameScene.addChild(scoreContainer);
 
   // Create progress component
-  const { progress, progressContainer } = Progress();
+  const { progress, progressContainer } = new Progress();
   gameScene.addChild(progressContainer);
 
   // Create game field
   const field = new Field(score, progress, moves, result);
   gameScene.addChild(field);
+
+  return gameScene;
 }
+
+

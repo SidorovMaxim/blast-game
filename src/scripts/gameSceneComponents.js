@@ -12,7 +12,7 @@ import yellow   from '../assets/boxes/yellow.png';
 
 
 // Init PIXI aliases
-let Container   = PIXI.Container,
+const Container   = PIXI.Container,
     loader      = PIXI.Loader.shared,
     Texture     = PIXI.Texture,
     Sprite      = PIXI.Sprite,
@@ -20,7 +20,7 @@ let Container   = PIXI.Container,
     TextStyle   = PIXI.TextStyle;
 
 // Init items images
-export const boxes = [blue, green, purple, red, yellow];
+export const boxes = [red, green, blue, yellow, purple];
 
 // Init wondow sizes
 export const windowSizes = {
@@ -35,8 +35,7 @@ let ratio = +((windowSizes.window_aspect_ratio > 1) ?
               (windowSizes.window_height / config.screen.height_default)).toFixed(3);
 
 // Init first level
-let level = 0;
-
+export const level = {value: 0};
 
 
 // Func for creating game scene background
@@ -98,7 +97,7 @@ export function Result() {
   // Create result text style
   const resultStyle = new TextStyle({
     fontFamily: 'Marvin',
-    fontSize: 115 * ratio,
+    fontSize: 70 * ratio,
     fill: 'white'
   });
 
@@ -127,7 +126,7 @@ export function Moves() {
   });
 
   // Create moves text
-  const moves = new Text(config.levels[level].moves, movesStyle);
+  const moves = new Text(config.levels[level.value].moves, movesStyle);
   moves.anchor.set(.5);
   movesContainer.addChild(moves);
 
@@ -152,7 +151,7 @@ export function Score() {
 
   // Create score text
   const score = new Text('0', scoreStyle);
-  score.target = config.levels[level].score;
+  score.target = config.levels[level.value].score;
   score.anchor.set(.5);
   scoreContainer.addChild(score);
 
@@ -269,10 +268,10 @@ export function Field(score, progress, moves, result) {
   field.x = config.field.position_default.x * ratio;
   field.y = config.field.position_default.y * ratio;
 
-  field.size = config.levels[level].field.size;
+  field.size = config.levels[level.value].field.size;
   field.size_default = config.field.size_default;
 
-  field.numOfColors = config.levels[level].field.numOfColors;
+  field.numOfColors = config.levels[level.value].field.numOfColors;
   field.sizeRatio = field.size_default / field.size;
   field.itemSize = {
     width: config.item.width_default * ratio * field.sizeRatio,
