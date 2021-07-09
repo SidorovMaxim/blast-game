@@ -233,18 +233,23 @@ function checkGameState(field, score, moves, result) {
 
 // Level passed
 function levelWon(field, score, moves, result) {
-  field.removeChildren();
-  result.text = 'Уровень пройден!';
+  if (level.value < config.levels.length - 1) {
+    field.removeChildren();
+    result.text = 'Уровень пройден!';
 
-  const interval = setInterval(() => {
-    if (+moves.text) {
-      score.text = +score.text + 500;
-      moves.text--;
-    } else {
-      clearInterval(interval);
-      Navigation.toggleVisibility(true);
-    }
-  }, 100);
+    const interval = setInterval(() => {
+      if (+moves.text) {
+        score.text = +score.text + 500;
+        moves.text--;
+      } else {
+        clearInterval(interval);
+        Navigation.toggleVisibility(true);
+      }
+    }, 100);
+  } else {
+    field.removeChildren();
+    result.text = 'Ты прошел игру!'
+  }
 }
 
 
@@ -258,12 +263,8 @@ function levelLost(field, result, phrase) {
 
 // Go to the next level
 export function nextLevel(result) {
-  if (level.value < config.levels.length - 1) {
-    level.value++;
-    createNewLevel();
-  } else {
-    result.text = 'Ты прошел игру!'
-  }
+  level.value++;
+  createNewLevel();
 }
 
 
