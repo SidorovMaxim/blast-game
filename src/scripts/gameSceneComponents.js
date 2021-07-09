@@ -10,26 +10,33 @@ import purple   from '../assets/boxes/purple.png';
 import yellow   from '../assets/boxes/yellow.png';
 
 
+
+// Init PIXI aliases
+let Container   = PIXI.Container,
+    loader      = PIXI.Loader.shared,
+    Texture     = PIXI.Texture,
+    Sprite      = PIXI.Sprite,
+    Text        = PIXI.Text,
+    TextStyle   = PIXI.TextStyle;
+
+// Init items images
 export const boxes = [blue, green, purple, red, yellow];
+
+// Init wondow sizes
 export const windowSizes = {
   window_width: window.innerWidth,
   window_height: window.innerHeight,
   window_aspect_ratio: +(window.innerWidth / window.innerHeight).toFixed(3)
 }
 
-
-let Container       = PIXI.Container,
-    loader          = PIXI.Loader.shared,
-    Sprite          = PIXI.Sprite,
-    Text            = PIXI.Text,
-    TextStyle       = PIXI.TextStyle;
-
-
+// Init ratio
 let ratio = +((windowSizes.window_aspect_ratio > 1) ?
               (windowSizes.window_width / config.screen.width_default) :
               (windowSizes.window_height / config.screen.height_default)).toFixed(3);
 
+// Init first level
 let level = 0;
+
 
 
 // Func for creating game scene background
