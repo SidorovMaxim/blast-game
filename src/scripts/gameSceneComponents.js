@@ -86,30 +86,6 @@ export function sceneHeaders() {
 }
 
 
-// Func for creating result component
-export function Result() {
-
-  // Create result component
-  const resultContainer = new Container();
-  resultContainer.x = config.result.position_default.x * ratio;
-  resultContainer.y = config.result.position_default.y * ratio;
-
-  // Create result text style
-  const resultStyle = new TextStyle({
-    fontFamily: 'Marvin',
-    fontSize: 70 * ratio,
-    fill: 'white'
-  });
-
-  // Create result text
-  const result = new Text('', resultStyle);
-  result.anchor.set(.5);
-  resultContainer.addChild(result);
-
-  return {result, resultContainer};
-}
-
-
 // Func for creating moves component
 export function Moves() {
 
@@ -285,4 +261,102 @@ export function Field(score, progress, moves, result) {
   checkPossibleProgress(field, score, progress, moves, result);
 
   return field;
+}
+
+
+// Func for creating result component
+export function Result() {
+
+  // Create result component
+  const resultContainer = new Container();
+  resultContainer.x = config.result.position_default.x * ratio;
+  resultContainer.y = config.result.position_default.y * ratio;
+
+  // Create result text style
+  const resultStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 70 * ratio,
+    fill: 'white'
+  });
+
+  // Create result text
+  const result = new Text('', resultStyle);
+  result.anchor.set(.5);
+  resultContainer.addChild(result);
+
+  return {result, resultContainer};
+}
+
+
+// Func for creating navigation component
+export function Navigation(result, replayLevelImg, nextLevelImg) {
+
+  // Create navigation component
+  const navigationContainer = new Container();
+  navigationContainer.x = config.navigation.position_default.x * ratio;
+  navigationContainer.y = config.navigation.position_default.y * ratio;
+
+  // Create button "next level" container
+  const nextLevelContainer = new Container();
+  nextLevelContainer.y = 300 * ratio;
+  nextLevelContainer.visible = false;
+  nextLevelContainer.interactive = true;
+  nextLevelContainer.buttonMode = true;
+  nextLevelContainer.on('pointerdown', handleNextLevel.bind(null, result));
+  navigationContainer.addChild(nextLevelContainer);
+
+  // Create button "next level" sprite
+  const nextLevelButton = new Sprite(loader.resources[nextLevelImg].texture);
+  nextLevelButton.scale.set(ratio);
+  nextLevelButton.anchor.set(.5);
+  nextLevelContainer.addChild(nextLevelButton);
+
+  // Create button "next level" text style
+  const nextLevelStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 35 * ratio,
+    fill: 'white'
+  });
+
+  // Create button "next level" text
+  const nextLevelText = new Text('Следующий уровень', nextLevelStyle);
+  nextLevelText.anchor.set(.5);
+  nextLevelContainer.addChild(nextLevelText);
+
+
+  // Create button "replay" container
+  const replayLevelContainer = new Container();
+  replayLevelContainer.y = 100 * ratio;
+  replayLevelContainer.visible = false;
+  replayLevelContainer.interactive = true;
+  replayLevelContainer.buttonMode = true;
+  replayLevelContainer.on('pointerdown', handleReplayLevel.bind(null, result));
+  navigationContainer.addChild(replayLevelContainer);
+
+  // Create button "replay" sprite
+  const replayLevelButton = new Sprite(loader.resources[replayLevelImg].texture);
+  replayLevelButton.scale.set(ratio);
+  replayLevelButton.anchor.set(.5);
+  replayLevelContainer.addChild(replayLevelButton);
+
+  // Create button "replay" text style
+  const replayLevelStyle = new TextStyle({
+    fontFamily: 'Marvin',
+    fontSize: 45 * ratio,
+    fill: 'white'
+  });
+
+  // Create button "replay" text
+  const replayLevelText = new Text('Переиграть', replayLevelStyle);
+  replayLevelText.anchor.set(.5);
+  replayLevelContainer.addChild(replayLevelText);
+
+
+  Navigation.toggleVisibility = function(levelPassed) {
+    if (levelPassed) nextLevelContainer.visible = !nextLevelContainer.visible;
+    replayLevelContainer.visible = !replayLevelContainer.visible;
+  }
+
+
+  return {navigationContainer};
 }

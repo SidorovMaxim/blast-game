@@ -1,7 +1,7 @@
 import animate from './animate.js';
 import { createNewLevel } from './main.js';
 import config from '../configs/config.json';
-import { Item, level } from './gameSceneComponents.js';
+import { Item, Navigation, level } from './gameSceneComponents.js';
 
 
 // Func for changing game field if player clicked on any item

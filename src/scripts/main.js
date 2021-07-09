@@ -1,10 +1,12 @@
 import '../main.css';
 import * as PIXI from 'pixi.js';
 import config from '../configs/config.json';
+import nextLevelImg from '../assets/buttons/next-level.png';
+import replayLevelImg from '../assets/buttons/replay-level.png';
 import bgImg from '../assets/backgrounds/background.png';
 import { boxes, windowSizes,
          sceneBackground, sceneHeaders,
-         Result, Moves, Score, Progress, Field }  from './gameSceneComponents.js';
+         Moves, Score, Progress, Field, Result, Navigation }  from './gameSceneComponents.js';
 
 
 // Init PIXI aliases
@@ -27,6 +29,8 @@ document.body.appendChild(app.view);
 loader
   .add(bgImg)
   .add(boxes)
+  .add(replayLevelImg)
+  .add(nextLevelImg)
   .load(createNewLevel);
 
 
@@ -49,10 +53,6 @@ function GameScene() {
   // Create scene headers
   gameScene.addChild(...sceneHeaders());
 
-  // Create result component
-  const { result, resultContainer } = new Result();
-  gameScene.addChild(resultContainer);
-
   // Create moves component
   const { moves, movesContainer } = new Moves();
   gameScene.addChild(movesContainer);
@@ -65,8 +65,16 @@ function GameScene() {
   const { progress, progressContainer } = new Progress();
   gameScene.addChild(progressContainer);
 
+  // Create result component
+  const { result, resultContainer } = new Result();
+  gameScene.addChild(resultContainer);
+
+  // Create navigation component
+  const { navigation, navigationContainer } = new Navigation(result, replayLevelImg, nextLevelImg);
+  gameScene.addChild(navigationContainer);
+
   // Create game field
-  const field = new Field(score, progress, moves, result);
+  const field = new Field(score, progress, moves, result, navigation);
   gameScene.addChild(field);
 
   return gameScene;
