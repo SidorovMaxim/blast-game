@@ -212,7 +212,7 @@ export function Item(column, row, field, score, progress, moves, result) {
   item.anchor.set(.5);
 
   item.interactive = true;
-  item.buttonMOde = true;
+  item.buttonMode = true;
   item.on('pointerdown', handleClick.bind(null, field, score, progress, moves, result));
 
   return item;
