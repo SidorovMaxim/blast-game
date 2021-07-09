@@ -217,22 +217,27 @@ function checkGameState(field, score, moves, result) {
         moves.text--;
       } else {
         clearInterval(interval);
-        changeLevel(result);
+        Navigation.toggleVisibility(true);
       }
     }, 100);
 
   } else if (!+moves.text) {
     field.removeChildren();
     result.text = 'Попробуй ещё раз';
+    Navigation.toggleVisibility(false);
   }
 }
 
 
-function changeLevel(result) {
+export function nextLevel(result) {
   if (level.value < config.levels.length - 1) {
     level.value++;
     createNewLevel();
   } else {
     result.text = 'Ты прошел игру!'
   }
+}
+
+export function replayLevel() {
+  createNewLevel();
 }

@@ -1,4 +1,4 @@
-import { changeGameScene } from './controllers.js';
+import { changeGameScene, nextLevel, replayLevel } from './controllers.js';
 
 
 export function handleClick(field, score, progress, moves, result, event) {

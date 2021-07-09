@@ -36,7 +36,7 @@
       }
     },
     {
-      "score": 3000,
+      "score": 2500,
       "moves": 30,
       "field": {
         "size": 9,
@@ -44,10 +44,26 @@
       }
     },
     {
-      "score": 3000,
+      "score": 2000,
       "moves": 40,
       "field": {
         "size": 9,
+        "numOfColors": 5
+      }
+    },
+    {
+      "score": 2000,
+      "moves": 50,
+      "field": {
+        "size": 8,
+        "numOfColors": 5
+      }
+    },
+    {
+      "score": 2000,
+      "moves": 40,
+      "field": {
+        "size": 6,
         "numOfColors": 5
       }
     }
