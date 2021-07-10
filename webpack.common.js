@@ -7,7 +7,7 @@ module.exports = {
     main: path.resolve(__dirname, './src/scripts/main.js')
   },
   output: {
-    path: path.resolve(__dirname, './build'),
+    path: path.resolve(__dirname, 'build'),
     filename: './scripts/bundle.js',
   },
   module: {
@@ -21,16 +21,10 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+        title: 'Production',
         template: path.resolve(__dirname, './src/template.html'),
         filename: 'index.html',
         favicon: './src/assets/icons/favicon.ico'
     })
-  ],
-  devServer: {
-    contentBase: path.join(__dirname, 'build'),
-    compress: true,
-    host: '0.0.0.0',
-    port: 9000
-  },
-  mode: 'development'
+  ]
 };
